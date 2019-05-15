@@ -1,0 +1,69 @@
+from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+
+
+class PlatformUserManager(BaseUserManager):
+    def create_user(self, username, email, password=None):
+        user = self.model(
+            username=username,
+            email=self.normalize_email(email),
+            is_teacher = False,
+        )
+
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_teacher_user(self, username, email, password=None):
+        user = self.create_user(
+            username,
+            email,
+            password = password,
+        )
+        user.is_teacher = True
+        return user
+
+    def create_superuser(self, username, email, password):
+        user = self.create_teacher_user(username, email, password=password)
+        user.is_admin = True
+        user.save(using=self._db)
+        return user
+
+
+class PlatformUser(AbstractBaseUser):
+    username = models.CharField(
+        unique=True,
+        max_length=50,
+
+    )
+    email = models.EmailField(
+        unique=True,
+        max_length=255,
+    )
+    is_teacher = models.BooleanField(default=False)
+    is_admin = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+
+    objects = PlatformUserManager()
+
+    USERNAME_FIELD = 'username'
+    REQUIRED_FIELDS = ['email',]
+
+    class Meta:
+        verbose_name = 'User'
+        verbose_name_plural = 'Users'
+
+    def __str__(self):
+        return self.username
+
+    def has_perm(self, perm, obj=None):
+        return True
+
+    def has_module_perms(self, app_label):
+        return True
+
+    @property
+    def is_staff(self):
+        return self.is_admin
+
+
