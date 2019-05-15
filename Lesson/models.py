@@ -6,3 +6,7 @@ class Lesson(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     content = models.TextField()
+    likes = models.ManyToManyField(settings.AUTH_USER_MODEL)
+
+    def __str__(self):
+        return self.title

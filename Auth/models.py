@@ -7,7 +7,7 @@ class PlatformUserManager(BaseUserManager):
         user = self.model(
             username=username,
             email=self.normalize_email(email),
-            is_teacher = False,
+            is_teacher=False
         )
 
         user.set_password(password)
@@ -65,5 +65,3 @@ class PlatformUser(AbstractBaseUser):
     @property
     def is_staff(self):
         return self.is_admin
-
-
