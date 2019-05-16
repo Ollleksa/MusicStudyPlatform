@@ -9,5 +9,8 @@ class Request(models.Model):
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now=True)
 
+    class Meta:
+        db_table = 'requests'
+
     def __str__(self):
         return self.title

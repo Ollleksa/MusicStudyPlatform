@@ -21,6 +21,10 @@ class PlatformUserManager(BaseUserManager):
 
 
 class PlatformUser(AbstractBaseUser):
+
+    class Meta:
+        db_table = 'users'
+
     username = models.CharField(
         unique=True,
         max_length=50,
@@ -53,4 +57,8 @@ class PlatformUser(AbstractBaseUser):
 
     @property
     def is_staff(self):
+        return self.is_admin
+
+    @property
+    def is_superuser(self):
         return self.is_admin

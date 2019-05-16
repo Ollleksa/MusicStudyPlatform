@@ -1,19 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %} All Blogs {% endblock %}
-
 {% block content %}
-<hr/>
 <h2>Welcome to main page {{ user.username }}!</h2>
-<hr/>
 
 {% if lesson_list %}
-<h3>Latest posts:</h3>
-<table>
-    {% for message in lesson_list %}
+<h3>Latest lessons:</h3>
+<table class="center">
+    {% for lesson in lesson_list %}
     <tr>
-    <th> {{ message.author }} </th>
-    <th> {{ message.title }} </th>
+    <th> {{ lesson.timestamp }} </th>
+    <th> {{ lesson.author }} </th>
+    <th> <a href="lesson/{{ lesson.id }}">{{ lesson.title }}</a> </th>
     </tr>
     {% endfor %}
 </table>

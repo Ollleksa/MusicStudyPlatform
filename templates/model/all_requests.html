@@ -27,7 +27,12 @@
 {% if requests %}
 <table class="center">
     {% for request in requests %}
-    <tr><th><a href="/request/{{ request.id }} "> {{ request.title }} </a></th></tr>
+    <tr>
+        <th>{{ request.timestamp }}</th>
+        <th><a href="/request/{{ request.id }} "> {{ request.title }} </a></th>
+        <th> by {{ request.requester }}</th>
+        <th> to {{ request.agent }}</th>
+    </tr>
     {% endfor %}
 </table>
 {% endif %}

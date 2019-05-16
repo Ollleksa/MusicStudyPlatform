@@ -27,7 +27,11 @@
 {% if lessons %}
 <table class="center">
     {% for lesson in lessons %}
-    <tr><th><a href="/lesson/{{ lesson.id }} "> {{ lesson.title }} </a></th></tr>
+    <tr>
+        <th>{{ lesson.timestamp }}</th>
+        <th>{{ lesson.author }}</th>
+        <th><a href="/lesson/{{ lesson.id }} "> {{ lesson.title }} </a></th>
+    </tr>
     {% endfor %}
 </table>
 {% endif %}
