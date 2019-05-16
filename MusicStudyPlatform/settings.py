@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     'Auth.apps.AuthConfig',
     'Lesson.apps.LessonConfig',
+    'Request.apps.RequestConfig',
 
     'rest_framework',
 ]

@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}MusicPlatform - All lessons{% endblock %}
+
+{% block content %}
+<div class="center">
+<h2>All lessons</h2>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if lessons.has_previous %}
+            <a href="?page=1">First</a>
+            <a href="?page={{ lessons.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ lessons.number }}\{{ lessons.paginator.num_pages }}
+        </span>
+
+        {% if lessons.has_next %}
+            <a href="?page={{ lessons.next_page_number }}">Next</a>
+            <a href="?page={{ lessons.paginator.num_pages }}">Last</a>
+        {% endif %}
+    </span>
+</div>
+
+{% if lessons %}
+<table class="center">
+    {% for lesson in lessons %}
+    <tr><th><a href="/lesson/{{ lesson.id }} "> {{ lesson.title }} </a></th></tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+</div>
+{% endblock %}

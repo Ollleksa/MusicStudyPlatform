@@ -11,17 +11,17 @@ class PlatformUserAdminForm(UserAdmin):
     form = PlatformUserChangeForm
     model = PlatformUser
 
-    list_display = ('username', 'email', 'is_teacher', 'is_admin')
-    list_filter = ('is_admin', 'is_teacher')
+    list_display = ('username', 'email', 'is_admin')
+    list_filter = ('is_admin', )
 
     fieldsets = (
         (None, {'fields': ('username', 'email', 'password')}),
-        ('Permissions', {'fields': ('is_teacher',)}),
+        ('Permissions', {'fields': ('is_admin',)}),
     )
 
     add_fieldsets = (
         (None, {'fields': ('username', 'email', 'password1', 'password2')}),
-        ('Permissions', {'fields': ('is_teacher',)}),
+        ('Permissions', {'fields': ('is_admin',)}),
     )
 
     filter_horizontal = ()

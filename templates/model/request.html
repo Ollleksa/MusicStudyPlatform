@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block title %}MusicPlatform - Request #{{ request.id }}{% endblock %}}
+
+{% block content %}
+<h2>{{ request.title }}</h2>
+<h3>Author: </h3> {{ request.requester.username }}
+<h3>Guru: </h3> {{ request.agent.username }}
+<p>{{ request.content }}</p>
+{% endblock %}

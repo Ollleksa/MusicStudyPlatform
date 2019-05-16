@@ -1,17 +1,13 @@
 from django.db import models
 from django.conf import settings
 
-from django.core.exceptions import ValidationError
-
 
 class Request(models.Model):
-    requestor = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    agent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=)
+    requester = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='request_by_user')
+    agent = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='request_to_teacher')
     title = models.CharField(max_length=255)
     content = models.TextField()
+    timestamp = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
-
-
-

@@ -8,14 +8,14 @@ class PlatformUserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm):
         model = PlatformUser
-        fields = ('username', 'email', 'is_teacher')
+        fields = ('username', 'email')
 
 
 class PlatformUserChangeForm(UserChangeForm):
 
     class Meta:
         model = PlatformUser
-        fields = ('username', 'email', 'is_teacher')
+        fields = ('username', 'email')
 
 
 class PlatformAuthForm(AuthenticationForm):

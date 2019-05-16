@@ -1,7 +1,10 @@
 from django.shortcuts import render
 from django.views import View
+from django.http import HttpResponseRedirect
+from django.core.paginator import Paginator
 
 from .models import Lesson
+from .forms import NewLesson
 
 
 class HomePage(View):
@@ -9,11 +12,63 @@ class HomePage(View):
 
     def get(self, request):
         current_user = request.user
-        lesson_list = Lesson.objects.all()
+        last_lesson_list = Lesson.objects.all().order_by('-timestamp')[:10]
 
         context = {
-            'lesson_list': lesson_list,
+            'lesson_list': last_lesson_list,
             'user': current_user,
         }
 
+        return render(request, self.template, context)
+
+
+class LessonPage(View):
+    template = 'model/lesson.html'
+
+    def get(self, request, **kwargs):
+        lesson = Lesson.objects.get(pk = kwargs['lesson_id'])
+        context = {
+            'lesson': lesson,
+        }
+        return render(request, self.template, context)
+
+
+class LessonCatalog(View):
+    template = 'model/all_lessons.html'
+
+    def get(self, request):
+        all_lessons = Lesson.objects.all().order_by('-timestamp')
+        paginator = Paginator(all_lessons, 20)
+        page = request.GET.get('page')
+        current_page = paginator.get_page(page)
+
+        context = {
+            'lessons': current_page,
+        }
+        return render(request, self.template, context)
+
+
+class CreateLessonPage(View):
+    template = 'model/create_lesson.html'
+
+    def get(self, request):
+        form = NewLesson()
+        context = {
+            'form': form,
+        }
+        return render(request, self.template, context)
+
+    def post(self, request):
+        form = NewLesson(request.POST)
+        if form.is_valid():
+            new_lesson = Lesson(author=request.user, title=form.cleaned_data['title'],
+                                content=form.cleaned_data['content'])
+            new_lesson.save()
+            return HttpResponseRedirect('{}'.format(new_lesson.pk))
+        else:
+            form = NewLesson()
+
+        context = {
+            'form': form,
+        }
         return render(request, self.template, context)

@@ -6,25 +6,15 @@ class PlatformUserManager(BaseUserManager):
     def create_user(self, username, email, password=None):
         user = self.model(
             username=username,
-            email=self.normalize_email(email),
-            is_teacher=False
+            email=self.normalize_email(email)
         )
 
         user.set_password(password)
         user.save(using=self._db)
         return user
 
-    def create_teacher_user(self, username, email, password=None):
-        user = self.create_user(
-            username,
-            email,
-            password = password,
-        )
-        user.is_teacher = True
-        return user
-
     def create_superuser(self, username, email, password):
-        user = self.create_teacher_user(username, email, password=password)
+        user = self.create_user(username, email, password=password)
         user.is_admin = True
         user.save(using=self._db)
         return user
@@ -40,7 +30,6 @@ class PlatformUser(AbstractBaseUser):
         unique=True,
         max_length=255,
     )
-    is_teacher = models.BooleanField(default=False)
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 

@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block title %}MusicPlatform - {{ lesson.title }}{% endblock %}}
+
+{% block content %}
+<h2>{{ lesson.title }}</h2>
+<h3>Author: </h3> {{ lesson.author.username }}
+<p>{{ lesson.content }}</p>
+{% endblock %}

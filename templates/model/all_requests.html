@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}MusicPlatform - All requests{% endblock %}
+
+{% block content %}
+<div class="center">
+<h2>All requests</h2>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if requests.has_previous %}
+            <a href="?page=1">First</a>
+            <a href="?page={{ requests.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ requests.number }}\{{ requests.paginator.num_pages }}
+        </span>
+
+        {% if requests.has_next %}
+            <a href="?page={{ requests.next_page_number }}">Next</a>
+            <a href="?page={{ requests.paginator.num_pages }}">Last</a>
+        {% endif %}
+    </span>
+</div>
+
+{% if requests %}
+<table class="center">
+    {% for request in requests %}
+    <tr><th><a href="/request/{{ request.id }} "> {{ request.title }} </a></th></tr>
+    {% endfor %}
+</table>
+{% endif %}
+
+</div>
+{% endblock %}
