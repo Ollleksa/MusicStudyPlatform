@@ -14,4 +14,3 @@ class ApiTestCase(TestCase):
 
     def test_serializer(self):
         ser = LessonSerializer(instance=self.new_lesson)
-        print(ser.data)

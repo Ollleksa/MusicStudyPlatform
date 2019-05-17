@@ -1,17 +1,14 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
+from rest_framework.permissions import IsAuthenticated
 
 from .models import Lesson
 from .serializers import LessonSerializer
 
 
 class LessonsAPIView(APIView):
-    @method_decorator(csrf_exempt)
-    def dispatch(self, request, *args, **kwargs):
-        return super(LessonsAPIView, self).dispatch(request, *args, **kwargs)
+    permission_classes = (IsAuthenticated, )
 
     def get(self, *args, **kwargs):
         all_lessons = Lesson.objects.all()
@@ -21,11 +18,10 @@ class LessonsAPIView(APIView):
 
     def post(self, *args, **kwargs):
         ser = LessonSerializer(data=self.request.data)
-        if ser.is_valid():
-            ser.save()
+        ser.is_valid(raise_exception=True)
+        ser.save()
 
-            return Response(data=ser.data, status=status.HTTP_201_CREATED)
-        return Response(data=ser.data, status=status.HTTP_400_BAD_REQUEST)
+        return Response(data=ser.data, status=status.HTTP_201_CREATED)
 
 
 class OneLessonAPIView(APIView):
