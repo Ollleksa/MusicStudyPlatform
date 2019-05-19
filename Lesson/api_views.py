@@ -1,33 +1,61 @@
-from rest_framework.views import APIView
+from django.shortcuts import get_object_or_404
+
+from rest_framework import viewsets
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
 from .models import Lesson
-from .serializers import LessonSerializer
+from .serializers import LessonSerializer, LikeSerializer
 
 
-class LessonsAPIView(APIView):
-    permission_classes = (IsAuthenticated, )
+class LessonViewSet(viewsets.ViewSet):
+    permission_classes = (IsAuthenticated,)
 
-    def get(self, *args, **kwargs):
-        all_lessons = Lesson.objects.all()
-        ser = LessonSerializer(all_lessons, many=True)
+    def list(self, request):
+        queryset = Lesson.objects.all()
+        serializer = LessonSerializer(queryset, many=True)
+        return Response(serializer.data)
 
-        return Response(data=ser.data)
+    def get(self, request, lesson_id=None):
+        queryset = Lesson.objects.all()
+        lesson = get_object_or_404(queryset, id=lesson_id)
+        serializer = LessonSerializer(lesson)
+        return Response(serializer.data)
 
-    def post(self, *args, **kwargs):
-        ser = LessonSerializer(data=self.request.data)
+    def create(self, request):
+        ser = LessonSerializer(data=self.request.data, context={'request': request})
         ser.is_valid(raise_exception=True)
         ser.save()
+        return Response(ser.data)
 
-        return Response(data=ser.data, status=status.HTTP_201_CREATED)
+    def delete(self, request, lesson_id=None):
+        queryset = Lesson.objects.all()
+        lesson = get_object_or_404(queryset, id=lesson_id)
+        if lesson.author != self.request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        lesson.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def patch(self, request, lesson_id=None):
+        queryset = Lesson.objects.all()
+        lesson = get_object_or_404(queryset, id=lesson_id)
+        if lesson.author != self.request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+        ser = LessonSerializer(lesson, data=request.data, partial=True)
+        ser.is_valid(raise_exception=True)
+        ser.save()
+        return Response(ser.data)
 
 
-class OneLessonAPIView(APIView):
+class LikeViewSet(viewsets.ViewSet):
+    permission_classes = (IsAuthenticated,)
 
-    def get(self, *args, **kwargs):
-        lesson = Lesson.objects.get(id=kwargs['lesson_id'])
-        ser = LessonSerializer(lesson)
-
-        return Response(data=ser.data)
+    def list(self, request, lesson_id=None):
+        queryset = Lesson.objects.all()
+        lesson = get_object_or_404(queryset, id=lesson_id)
+        likes = lesson.likes.all()
+        print(likes)
+        ser = LikeSerializer(likes, many=True)
+        print(ser.data)
+        return Response(ser.data)

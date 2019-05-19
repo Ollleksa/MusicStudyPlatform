@@ -19,7 +19,7 @@ class Lesson(models.Model):
 class Like(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.SET_NULL, null=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
-    is_liked = models.BooleanField(default=True)
+    #is_liked = models.BooleanField(default=True)
 
     class Meta:
         db_table = 'likes_on_lessons'
