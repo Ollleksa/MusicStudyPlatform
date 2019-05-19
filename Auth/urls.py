@@ -16,4 +16,5 @@ urlpatterns = [
 
     path('api/users', UserViewSet.as_view({'get': 'list', 'post': 'create'}), name='all_users'),
     path('api/user', UserViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'delete'}), name='user'),
+    path('api/user/<int:id>', UserViewSet.as_view({'get': 'retrieve'}))
 ]

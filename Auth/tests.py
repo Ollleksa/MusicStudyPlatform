@@ -1,8 +1,10 @@
 from django.test import TestCase, Client
 from django.urls import reverse
 from rest_framework.test import APITestCase
+from rest_framework import status
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.settings import api_settings
+from django.core.exceptions import ValidationError
 
 
 from .models import PlatformUser
@@ -43,6 +45,30 @@ class APITestUser(APITestCase):
         self.name, self.email, self.password = "oleks", "test@test.test", "11testes"
         self.user = PlatformUser.objects.create_user(self.name, self.email, self.password)
 
+    def test_sign_up(self):
+        data = {"username": "new_name", "email": "real@mail.com", "password": self.password}
+        resp = self.client.post(
+            reverse('sign_up'),
+            data=data
+        )
+        self.assertTrue(PlatformUser.objects.filter(username="new_name").exists())
+
+    def test_sign_up_short_password(self):
+        with self.assertRaises(ValidationError):
+            data = {"username": "new_name", "email": "real@mail.com", "password": "ole"}
+            resp = self.client.post(
+                reverse('sign_up'),
+                data=data
+            )
+
+    def test_sign_up_no_email(self):
+        data = {"username": "new_name", "email": "realmail.com", "password": "11oleole"}
+        resp = self.client.post(
+            reverse('sign_up'),
+            data=data
+        )
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+
     def test_auth(self):
         data ={"username": self.name, "password": self.password}
         resp = self.client.post(reverse("token_obtain_pair"), data=data)
@@ -50,11 +76,23 @@ class APITestUser(APITestCase):
         self.assertIn("access", resp.data)
         self.assertIn("refresh", resp.data)
 
+    def test_auth_fail(self):
+        data ={"username": self.name, "password": "otherpass11"}
+        resp = self.client.post(reverse("token_obtain_pair"), data=data)
+        self.assertEqual(resp.status_code, 401)
+
     def test_auth_refresh(self):
         data = {"username": self.name, "password": self.password}
         resp = self.client.post(reverse("token_obtain_pair"), data=data)
         resp = self.client.post(reverse('token_refresh'), data={"refresh": resp.data["refresh"]})
         self.assertEqual(resp.status_code, 200)
+
+    def test_auth_refresh_fail(self):
+        data = {"username": self.name, "password": self.password}
+        resp = self.client.post(reverse("token_obtain_pair"), data=data)
+        refresh = resp.data["refresh"] + 'f'
+        resp = self.client.post(reverse('token_refresh'), data={"refresh": refresh})
+        self.assertEqual(resp.status_code, 401)
 
     def test_get_all_user_info(self):
         token = AccessToken.for_user(self.user)
@@ -72,6 +110,43 @@ class APITestUser(APITestCase):
         )
         self.assertEqual(resp.status_code, 200)
 
+    def test_get_user_info_by_id(self):
+        token = AccessToken.for_user(self.user)
+        resp = self.client.get(
+            '/auth/api/user/{}'.format(self.user.id),
+            HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}'
+        )
+        self.assertEqual(resp.status_code, 200)
+
+    def test_get_user_info_by_id_fail(self):
+        token = AccessToken.for_user(self.user)
+        resp = self.client.get(
+            '/auth/api/user/{}'.format(self.user.id+10),
+            HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}'
+        )
+        self.assertEqual(resp.status_code, 404)
+
+    def test_update_user(self):
+        token = AccessToken.for_user(self.user)
+        data = {"username": "updated_name", "email": "real@mail.com", "password": self.password}
+        resp = self.client.put(
+            reverse('user'),
+            data=data,
+            HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}'
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertTrue(PlatformUser.objects.filter(username="updated_name").exists())
+
+    def test_update_user_fail(self):
+        token = AccessToken.for_user(self.user)
+        data = {"username": "updated_name", "email": "real@mail.com", "password": '111'}
+        with self.assertRaises(ValidationError):
+            resp = self.client.put(
+                reverse('user'),
+                data=data,
+                HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}'
+            )
+
     def test_delete_user_by_api(self):
         token = AccessToken.for_user(self.user)
         resp = self.client.delete(
@@ -81,6 +156,7 @@ class APITestUser(APITestCase):
         self.assertEqual(resp.status_code, 204)
         self.assertTrue(not PlatformUser.objects.filter(username=self.name).exists())
 
+    # For sudo will do later
     def test_create_user_by_api(self):
         self.user.is_admin = True
         self.user.save()
@@ -89,18 +165,6 @@ class APITestUser(APITestCase):
         resp = self.client.post(
             reverse('all_users'),
             HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}',
-            data=data
-        )
-        self.assertTrue(PlatformUser.objects.filter(username="new_name").exists())
-
-    def test_update_user(self):
-        token = AccessToken.for_user(self.user)
-        pass
-
-    def test_sign_up(self):
-        data = {"username": "new_name", "email": "real@mail.com", "password": self.password}
-        resp = self.client.post(
-            reverse('sign_up'),
             data=data
         )
         self.assertTrue(PlatformUser.objects.filter(username="new_name").exists())

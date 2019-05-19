@@ -26,7 +26,9 @@ class UserViewSet(viewsets.ViewSet):
 
     def retrieve(self, request, id=None):
         queryset = User.objects.all()
-        user = get_object_or_404(queryset, id=request.user.id)
+        if not id:
+            id = request.user.id
+        user = get_object_or_404(queryset, id=id)
         serializer = UserSerializer(user)
         return Response(serializer.data)
 
@@ -38,7 +40,7 @@ class UserViewSet(viewsets.ViewSet):
         ser.save()
         return Response(ser.data)
 
-    def update(self, request, id=None):
+    def update(self, request):
         queryset = User.objects.all()
         user = get_object_or_404(queryset, id=request.user.id)
         ser = UserSerializer(user, data=self.request.data)
@@ -47,7 +49,7 @@ class UserViewSet(viewsets.ViewSet):
         ser.save()
         return Response(ser.data)
 
-    def delete(self, request, id=None):
+    def delete(self, request):
         queryset = User.objects.all()
         user = get_object_or_404(queryset, id=request.user.id)
         user.delete()
