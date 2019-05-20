@@ -6,18 +6,19 @@ from .models import Lesson, Like
 
 
 class LikeSerializer(serializers.ModelSerializer):
+    # user = serializers.PrimaryKeyRelatedField(queryset=get_user_model().objects.all(), default=CurrentUserDefault())
+    # lesson = serializers.RelatedField(source='lessons', queryset=Lesson.objects.all())
+
     class Meta:
         model = Like
-        fields = ('user',)
-        read_only_fields = ('user',)
+        fields = ('user', 'lesson')
 
 
 class LessonSerializer(serializers.ModelSerializer):
     author = serializers.PrimaryKeyRelatedField(queryset=get_user_model().objects.all(), default=CurrentUserDefault())
-    likes = LikeSerializer(many=True, read_only=True)
 
     class Meta:
         model = Lesson
-        fields = ('id', 'author', 'title', 'content', 'timestamp', 'likes')
+        fields = ('id', 'author', 'title', 'content', 'timestamp')
         read_only_fields = ('id', 'timestamp')
 

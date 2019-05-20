@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 
-from .models import Lesson
+from .models import Lesson, Like
 from .serializers import LessonSerializer, LikeSerializer
 
 
@@ -54,8 +54,21 @@ class LikeViewSet(viewsets.ViewSet):
     def list(self, request, lesson_id=None):
         queryset = Lesson.objects.all()
         lesson = get_object_or_404(queryset, id=lesson_id)
-        likes = lesson.likes.all()
-        print(likes)
+        likes = Like.objects.filter(lesson=lesson)
         ser = LikeSerializer(likes, many=True)
-        print(ser.data)
         return Response(ser.data)
+
+    def like(self, request, lesson_id=None):
+        queryset = Lesson.objects.all()
+        lesson = get_object_or_404(queryset, id=lesson_id)
+        ser = LikeSerializer(data={'user': request.user.id, 'lesson': lesson.id}, context={'request': request})
+        ser.is_valid(raise_exception=True)
+        ser.save()
+        return Response(ser.data)
+
+    def unlike(self, request, lesson_id=None):
+        queryset = Lesson.objects.all()
+        lesson = get_object_or_404(queryset, id=lesson_id)
+        like = Like.objects.get(lesson=lesson, user=request.user)
+        like.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)

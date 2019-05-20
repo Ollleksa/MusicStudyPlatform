@@ -13,5 +13,5 @@ urlpatterns = [
     path('api/lesson/<int:lesson_id>', LessonViewSet.as_view({'get': 'get', 'delete': 'delete'})),
     path('api/lesson', LessonViewSet.as_view({'post': 'create'}), name='lesson'),
 
-    path('api/lesson/<int:lesson_id>/likes', LikeViewSet.as_view({'get': 'list'})),
+    path('api/lesson/<int:lesson_id>/likes', LikeViewSet.as_view({'get': 'list', 'post': 'like', 'delete': 'unlike'})),
 ]

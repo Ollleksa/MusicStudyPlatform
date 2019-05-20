@@ -6,7 +6,6 @@ class Lesson(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     content = models.TextField()
-    likes = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Like', related_name='likes_on_lesson')
     timestamp = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -17,10 +16,12 @@ class Lesson(models.Model):
 
 
 class Like(models.Model):
-    lesson = models.ForeignKey(Lesson, on_delete=models.SET_NULL, null=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True)
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     #is_liked = models.BooleanField(default=True)
 
     class Meta:
         db_table = 'likes_on_lessons'
+        unique_together = ['lesson', 'user']
+
         

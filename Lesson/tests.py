@@ -5,8 +5,7 @@ from rest_framework.test import APITestCase
 from rest_framework_simplejwt.settings import api_settings
 from rest_framework_simplejwt.tokens import AccessToken
 
-from .models import Lesson
-from .serializers import LessonSerializer
+from .models import Lesson, Like
 
 
 class ApiTestCase(APITestCase):
@@ -16,7 +15,8 @@ class ApiTestCase(APITestCase):
         self.other_user = User.objects.create_user(username='new', email='ole@ole.ole', password='Some11Pass')
         self.new_lesson = Lesson(author=self.user, title='Test', content='Test content')
         self.new_lesson.save()
-        self.new_lesson.likes.add(self.user, self.other_user)
+        likes = [Like(user=self.user, lesson=self.new_lesson), Like(user=self.other_user, lesson=self.new_lesson)]
+        [x.save() for x in likes]
 
     def test_get_all_lessons(self):
         token = AccessToken.for_user(self.user)
@@ -104,7 +104,27 @@ class ApiTestCase(APITestCase):
         token = AccessToken.for_user(self.user)
         resp = self.client.get(
             '/api/lesson/{}/likes'.format(self.new_lesson.id),
-            HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}'
+            HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}',
         )
-        print(resp.data)
         self.assertEqual(resp.status_code, 200)
+
+    def test_set_like(self):
+        third_user = get_user_model().objects.create_user(username='third_user', email='third@iuser.ole',
+                                                          password='Some11Pass')
+        token = AccessToken.for_user(third_user)
+        resp = self.client.post(
+            '/api/lesson/{}/likes'.format(self.new_lesson.id),
+            HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}',
+        )
+        new_like = Like.objects.filter(user=third_user).first()
+        self.assertEqual(new_like.user.username, 'third_user')
+        self.assertEqual(resp.status_code, 200)
+
+    def test_set_dislike(self):
+        token = AccessToken.for_user(self.user)
+        resp = self.client.delete(
+            '/api/lesson/{}/likes'.format(self.new_lesson.id),
+            HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}',
+        )
+        self.assertTrue(not Like.objects.filter(user= self.user).exists())
+        self.assertEqual(resp.status_code, 204)
