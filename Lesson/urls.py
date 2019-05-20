@@ -9,7 +9,8 @@ urlpatterns = [
     path('lesson/create', CreateLessonPage.as_view(), name='create_lesson'),
     path('lesson', LessonCatalog.as_view(), name='lessons_all'),
 
-    path('api/all_lessons', LessonViewSet.as_view({'get': 'list'}), name='api_lessons'),
+    path('api/lessons', LessonViewSet.as_view({'get': 'list'}), name='api_lessons'),
+    path('api/lessons/user/<int:user_id>', LessonViewSet.as_view({'get': 'list_by_user'})),
     path('api/lesson/<int:lesson_id>', LessonViewSet.as_view({'get': 'get', 'delete': 'delete'})),
     path('api/lesson', LessonViewSet.as_view({'post': 'create'}), name='lesson'),
 

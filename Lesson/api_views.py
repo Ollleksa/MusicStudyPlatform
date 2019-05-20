@@ -17,6 +17,11 @@ class LessonViewSet(viewsets.ViewSet):
         serializer = LessonSerializer(queryset, many=True)
         return Response(serializer.data)
 
+    def list_by_user(self, request, user_id):
+        queryset = Lesson.objects.filter(author=user_id)
+        serializer = LessonSerializer(queryset, many=True)
+        return Response(serializer.data)
+
     def get(self, request, lesson_id=None):
         queryset = Lesson.objects.all()
         lesson = get_object_or_404(queryset, id=lesson_id)
