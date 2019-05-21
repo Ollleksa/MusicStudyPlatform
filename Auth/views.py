@@ -3,6 +3,8 @@ from django.urls import reverse
 from django.views import View
 from django.shortcuts import render
 from django.contrib.auth import login, authenticate, logout
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
 
 from .forms import PlatformUserCreationForm, PlatformAuthForm
 
@@ -22,7 +24,18 @@ class SignUpPage(View):
         form = self.form_cls(request.POST)
 
         if form.is_valid():
-            form.save()
+            user = form.save()
+
+            mail_subject = 'Welcome!'
+            context = {
+                'user':user.username,
+            }
+            message = render_to_string('auth/activation_email.html', context)
+
+            to_email = form.cleaned_data.get('email')
+            email = EmailMessage(mail_subject, message, to=[to_email])
+            email.send()
+
             return HttpResponseRedirect(reverse('index'))
 
         context = {

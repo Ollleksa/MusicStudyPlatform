@@ -5,5 +5,9 @@
 {% block content %}
 <h2>{{ lesson.title }}</h2>
 <h3>Author: </h3> {{ lesson.author.username }}
+{% if lesson.author.avatar %}
+<h3> Here avatar. </h3>
+    <div><img src="..{{ lesson.author.avatar.url }}"></div>
+{% endif %}
 <p>{{ lesson.content }}</p>
 {% endblock %}

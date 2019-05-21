@@ -1,6 +1,7 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, AuthenticationForm
 
+
 from .models import PlatformUser
 
 
@@ -8,7 +9,7 @@ class PlatformUserCreationForm(UserCreationForm):
 
     class Meta(UserCreationForm):
         model = PlatformUser
-        fields = ('username', 'email')
+        fields = ('username', 'email', 'avatar')
 
 
 class PlatformUserChangeForm(UserChangeForm):

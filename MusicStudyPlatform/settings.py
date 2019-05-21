@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'Request.apps.RequestConfig',
 
     'rest_framework',
+    'drf_yasg',
 ]
 
 MIDDLEWARE = [
@@ -165,7 +166,20 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
-
+STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static")
+STATICFILES_DIRS = (
+    os.path.join(BASE_DIR, "static"),
+)
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media")
 
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+
+# Email handling
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'oleksabk@gmail.com'
+EMAIL_HOST_PASSWORD = 'tukRD%Ahri'
+EMAIL_PORT = 587

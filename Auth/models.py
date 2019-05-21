@@ -34,6 +34,9 @@ class PlatformUser(AbstractBaseUser):
         unique=True,
         max_length=255,
     )
+
+    avatar = models.ImageField(upload_to='media/', null=True, blank=True)
+
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
 

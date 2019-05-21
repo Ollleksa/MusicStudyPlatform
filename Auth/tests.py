@@ -156,6 +156,15 @@ class APITestUser(APITestCase):
         self.assertEqual(resp.status_code, 204)
         self.assertTrue(not PlatformUser.objects.filter(username=self.name).exists())
 
+    # def test_upload_file(self):
+    #     token = AccessToken.for_user(self.user)
+    #     resp = self.client.put(
+    #         reverse('file_upload'),
+    #         HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}'
+    #     )
+    #     self.assertEqual(resp.status_code, 204)
+    #     self.assertTrue(not PlatformUser.objects.filter(username=self.name).exists())
+
     # For sudo will do later
     def test_create_user_by_api(self):
         self.user.is_admin = True

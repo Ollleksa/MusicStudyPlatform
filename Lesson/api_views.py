@@ -66,6 +66,8 @@ class LikeViewSet(viewsets.ViewSet):
     def like(self, request, lesson_id=None):
         queryset = Lesson.objects.all()
         lesson = get_object_or_404(queryset, id=lesson_id)
+        if Like.objects.filter(lesson=lesson, user=request.user).exists():
+            return Response(status=status.HTTP_200_OK)
         ser = LikeSerializer(data={'user': request.user.id, 'lesson': lesson.id}, context={'request': request})
         ser.is_valid(raise_exception=True)
         ser.save()

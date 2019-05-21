@@ -17,11 +17,13 @@ class PlatformUserAdminForm(UserAdmin):
     fieldsets = (
         (None, {'fields': ('username', 'email', 'password')}),
         ('Permissions', {'fields': ('is_admin',)}),
+        ('Other', {'fields': ('avatar',)}),
     )
 
     add_fieldsets = (
         (None, {'fields': ('username', 'email', 'password1', 'password2')}),
         ('Permissions', {'fields': ('is_admin',)}),
+        ('Other', {'fields': ('avatar', )}),
     )
 
     filter_horizontal = ()
