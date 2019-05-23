@@ -125,7 +125,7 @@ REST_FRAMEWORK = {
 
 # JWT
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=30),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
@@ -170,6 +170,7 @@ STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static")
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, "static"),
 )
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(os.path.dirname(BASE_DIR), "media")
 
@@ -180,6 +181,6 @@ LOGOUT_REDIRECT_URL = '/'
 # Email handling
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'oleksabk@gmail.com'
-EMAIL_HOST_PASSWORD = 'tukRD%Ahri'
+EMAIL_HOST_USER = MusicStudyPlatform.secret_data.EMAIL_HOST_USER
+EMAIL_HOST_PASSWORD = MusicStudyPlatform.secret_data.EMAIL_HOST_PASSWORD
 EMAIL_PORT = 587

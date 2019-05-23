@@ -1,4 +1,7 @@
 from django.shortcuts import get_object_or_404
+from django.template.loader import render_to_string
+from django.core.mail import EmailMessage
+from django.contrib.auth import get_user_model
 
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -27,6 +30,19 @@ class RequestViewSet(viewsets.ViewSet):
         ser = RequestSerializer(data=self.request.data, context={'request': request})
         ser.is_valid(raise_exception=True)
         ser.save()
+
+        user = get_user_model().objects.get(id=ser.data['agent'])
+
+        mail_subject = 'New request'
+        context = {
+            'user': user.username,
+        }
+        message = render_to_string('auth/activation_email.html', context)
+
+        to_email = user.email
+        email = EmailMessage(mail_subject, message, to=[to_email])
+        email.send()
+
         return Response(ser.data)
 
     def delete(self, request, request_id=None):

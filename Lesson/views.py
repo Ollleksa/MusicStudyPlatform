@@ -22,6 +22,14 @@ class HomePage(View):
         return render(request, self.template, context)
 
 
+class JsLessonPage(View):
+    template = 'model/js_lesson.html'
+
+    def get(self, request, **kwargs):
+        return render(request, self.template)
+
+
+
 class LessonPage(View):
     template = 'model/lesson.html'
 

@@ -6,6 +6,7 @@ class Lesson(models.Model):
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=255)
     content = models.TextField()
+    header_image = models.ImageField(upload_to='media/', null=True, blank=True)
     timestamp = models.DateTimeField(auto_now=True)
 
     class Meta:
@@ -18,7 +19,6 @@ class Lesson(models.Model):
 class Like(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    #is_liked = models.BooleanField(default=True)
 
     class Meta:
         db_table = 'likes_on_lessons'

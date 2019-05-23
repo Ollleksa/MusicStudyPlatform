@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
+from django.conf import settings
 
 from rest_framework import viewsets
 from rest_framework import views
@@ -8,6 +9,8 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import FileUploadParser
+
+from PIL import Image
 
 from .models import PlatformUser as User
 from .serializers import UserSerializer
@@ -84,4 +87,9 @@ class FileUploadView(views.APIView):
 
         user = request.user
         user.avatar.save(file.name, file, save=True)
+        image = Image.open(user.avatar)
+        image.thumbnail((128,128))
+        image.save(settings.MEDIA_ROOT + '/media/' + file.name)
+        user.avatar = image
+
         return Response(status.HTTP_202_ACCEPTED)

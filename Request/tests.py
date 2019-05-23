@@ -33,7 +33,7 @@ class RequestApiTestCase(APITestCase):
     def test_get_one_request(self):
         token = AccessToken.for_user(self.user)
         resp = self.client.get(
-            '/request/api/request/{}'.format(self.new_request.id),
+            reverse('one_request', kwargs={'request_id': self.new_request.id}),
             HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}'
         )
         self.assertEqual(resp.status_code, 200)
@@ -41,7 +41,7 @@ class RequestApiTestCase(APITestCase):
     def test_get_404_request(self):
         token = AccessToken.for_user(self.user)
         resp = self.client.get(
-            '/request/api/request/{}'.format(self.new_request.id + 10),
+            reverse('one_request', kwargs={'request_id': self.new_request.id+10}),
             HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}'
         )
         self.assertEqual(resp.status_code, 404)
@@ -70,7 +70,7 @@ class RequestApiTestCase(APITestCase):
         token = AccessToken.for_user(self.user)
         self.assertTrue(Request.objects.filter(id = self.new_request.id).exists())
         resp = self.client.delete(
-            '/request/api/request/{}'.format(self.new_request.id),
+            reverse('one_request', kwargs={'request_id': self.new_request.id}),
             HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}'
         )
         self.assertTrue(not Request.objects.filter(id = self.new_request.id).exists())
@@ -81,7 +81,7 @@ class RequestApiTestCase(APITestCase):
         token = AccessToken.for_user(new_user)
         self.assertTrue(Request.objects.filter(id = self.new_request.id).exists())
         resp = self.client.delete(
-            '/request/api/request/{}'.format(self.new_request.id),
+            reverse('one_request', kwargs={'request_id': self.new_request.id}),
             HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}'
         )
         self.assertTrue(Request.objects.filter(id = self.new_request.id).exists())
@@ -91,7 +91,7 @@ class RequestApiTestCase(APITestCase):
         token = AccessToken.for_user(self.user)
         data = {'content': 'Patched content'}
         resp = self.client.patch(
-            '/request/api/request/{}'.format(self.new_request.id),
+            reverse('one_request', kwargs={'request_id': self.new_request.id}),
             data=data,
             HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}'
         )

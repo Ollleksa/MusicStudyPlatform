@@ -8,6 +8,7 @@ from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 
+import Auth.urls, Lesson.urls, Request.urls
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -30,6 +31,14 @@ urlpatterns = [
     path('request/', include('Request.urls')),
     re_path('redoc/$', schema_view.with_ui('redoc', cache_timeout=0), name='schema-redoc'),
 ]
+
+api_patterns = [
+    path('api/auth/', include(Auth.urls.api_patterns)),
+    path('api/lesson/', include(Lesson.urls.api_patterns)),
+    path('api/request/', include(Request.urls.api_patterns)),
+]
+
+urlpatterns += api_patterns
 
 urlpatterns += staticfiles_urlpatterns()
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

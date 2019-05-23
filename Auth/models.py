@@ -39,6 +39,7 @@ class PlatformUser(AbstractBaseUser):
 
     is_admin = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
+    is_validated = models.BooleanField(default=False)
 
     objects = PlatformUserManager()
 

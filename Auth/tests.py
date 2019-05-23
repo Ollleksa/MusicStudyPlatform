@@ -113,7 +113,7 @@ class APITestUser(APITestCase):
     def test_get_user_info_by_id(self):
         token = AccessToken.for_user(self.user)
         resp = self.client.get(
-            '/auth/api/user/{}'.format(self.user.id),
+            reverse('one_user', kwargs={'id': self.user.id}),
             HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}'
         )
         self.assertEqual(resp.status_code, 200)
@@ -121,7 +121,7 @@ class APITestUser(APITestCase):
     def test_get_user_info_by_id_fail(self):
         token = AccessToken.for_user(self.user)
         resp = self.client.get(
-            '/auth/api/user/{}'.format(self.user.id+10),
+            reverse('one_user', kwargs={'id': self.user.id+10}),
             HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}'
         )
         self.assertEqual(resp.status_code, 404)

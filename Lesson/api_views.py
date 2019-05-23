@@ -1,9 +1,11 @@
 from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets
+from rest_framework import views
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import FileUploadParser
 
 from .models import Lesson, Like
 from .serializers import LessonSerializer, LikeSerializer
@@ -79,3 +81,23 @@ class LikeViewSet(viewsets.ViewSet):
         like = Like.objects.get(lesson=lesson, user=request.user)
         like.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class FileUploadView(views.APIView):
+    parser_classes = (FileUploadParser,)
+    permission_classes = (IsAuthenticated,)
+
+    def put(self, request, lesson_id=None):
+        queryset = Lesson.objects.all()
+        lesson = get_object_or_404(queryset, id=lesson_id)
+        if lesson.author != self.request.user:
+            return Response(status=status.HTTP_403_FORBIDDEN)
+
+        try:
+            file = request.data['file']
+        except KeyError:
+            raise KeyError('Request has no avatar attached')
+
+        lesson.header_image.save(file.name, file, save=True)
+
+        return Response(status.HTTP_202_ACCEPTED)

@@ -29,7 +29,7 @@ class ApiTestCase(APITestCase):
     def test_get_users_lessons(self):
         token = AccessToken.for_user(self.other_user)
         resp = self.client.get(
-            '/api/lessons/user/{}'.format(self.user.id),
+            '/api/lesson/user/{}'.format(self.user.id),
             HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}'
         )
         self.assertEqual(resp.status_code, 200)

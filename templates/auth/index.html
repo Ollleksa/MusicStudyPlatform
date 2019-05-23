@@ -1,0 +1,65 @@
+<!--Login form-->
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+</head>
+<body>
+    <!--<form action="/login" method="post">-->
+    <form id="id_form" action="javascript:;" onsubmit="loginFormOnSubmit(this);">
+        <label for="id_login">Username :</label>
+        <input name="login" type="login" id="id_login">
+        <br />
+        <label for="id_password">Password :</label>
+        <input name="password" type="password" id="id_password">
+        <br />
+        <input name="submit" type="button" id="id_submit" value="Log In">
+        <!--<input name="submit" type="submit" id="id_submit" value="Log In">-->
+    </form>
+
+    <script>
+        $(document).ready(function(){
+            $("#id_submit").click(function(){
+                event.preventDefault();
+                var username = $("#id_login").val();
+                var password = $("#id_password").val();
+                // Checking for blank fields
+                if( username == '' || password == '') {
+                    $('input[type="username"],input[type="password"]').css("border","2px solid red");
+                    $('input[type="username"],input[type="password"]').css("box-shadow","0 0 3px red");
+                    alert("Please fill all fields...!!!!!!");
+                } else {
+                    login_ajax(username, password);
+                }
+            });
+                function login_ajax(username, password) {
+                    var request = $.ajax({
+                        url: "/api/auth/token/",
+                        type: "POST",
+                        data: {
+                            username: username,
+                            password: password,
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            // if response - OK
+                            console.log('Hello');
+                            console.log(data.access);
+                            localStorage.setItem('Access', JSON.stringify(data.access)); // VERY BAD PRACTICE
+                            localStorage.setItem('Refresh', JSON.stringify(data.refresh)); // VERY BAD PRACTICE
+                            // https://dev.to/perrydbucs/using-jwts-for-authentication-in-restful-applications-55hc  -  GOOD practice
+                            window.location.href = '/'; // it's success page
+                        },
+                    error: function (data) {
+                        // if response - Bad
+                        if (data.status_code == 403) {
+                            alert("Username or password is incorrect!");
+                        }
+                    },
+                    complete: function () {}
+                });
+            }
+        });
+    </script>
+</body>
+</html>
