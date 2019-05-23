@@ -70,22 +70,23 @@ class LoginPage(View):
 
 
 class JSLoginPage(View):
-    form_cls = PlatformAuthForm
-    template = 'auth/index.html'
+    template = 'auth/js_signin.html'
 
     def get(self, request):
         return render(request, self.template)
 
     def post(self, request):
-        form = self.form_cls(data=request.POST)
-        if form.is_valid():
-            user = authenticate(request, username=form.cleaned_data['username'], password=form.cleaned_data['password'])
-            if user is not None:
-                login(request, user)
-                return HttpResponseRedirect(reverse('index'))
-
         return render(request, self.template)
 
+
+class JSSignUpPage(View):
+    template = 'auth/js_signup.html'
+
+    def get(self, request):
+        return render(request, self.template)
+
+    def post(self, request):
+        return render(request, self.template)
 
 class LogoutPage(View):
     template = 'auth/logout.html'

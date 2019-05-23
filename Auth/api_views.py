@@ -11,9 +11,24 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.parsers import FileUploadParser
 
 from PIL import Image
+from celery import shared_task
 
 from .models import PlatformUser as User
 from .serializers import UserSerializer
+
+
+@shared_task
+def email_send(user_id):
+    user = User.objects.get(id=user_id)
+    mail_subject = 'Welcome!'
+    context = {
+        'user': user.username,
+    }
+    message = render_to_string('auth/activation_email.html', context)
+
+    to_email = user.email
+    email = EmailMessage(mail_subject, message, to=[to_email])
+    email.send()
 
 
 class SignUpViewSet(viewsets.ViewSet):
@@ -22,15 +37,7 @@ class SignUpViewSet(viewsets.ViewSet):
         ser.is_valid(raise_exception=True)
         user = ser.save()
 
-        mail_subject = 'Welcome!'
-        context = {
-            'user': user.username,
-        }
-        message = render_to_string('auth/activation_email.html', context)
-
-        to_email = user.email
-        email = EmailMessage(mail_subject, message, to=[to_email])
-        email.send()
+        email_send.delay(user.id)
 
         return Response(ser.data)
 

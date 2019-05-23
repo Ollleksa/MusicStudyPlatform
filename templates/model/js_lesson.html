@@ -23,7 +23,8 @@
              url : "http://127.0.0.1:8000/api/lesson/2",
              dataType : "json",
              beforeSend : function( xhr ) {
-                      xhr.setRequestHeader( 'Authorization', 'BEARER ' +  localStorage.getItem('Access'));
+                      var token = localStorage.getItem('Access');
+                      xhr.setRequestHeader( 'Authorization', 'Bearer ' +  token.slice(1, token.length-1));
              },
              success : function (data) {
                       $('#title').text( data.title );

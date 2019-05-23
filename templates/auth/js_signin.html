@@ -45,8 +45,8 @@
                             // if response - OK
                             console.log('Hello');
                             console.log(data.access);
-                            localStorage.setItem('Access', JSON.stringify(data.access)); // VERY BAD PRACTICE
-                            localStorage.setItem('Refresh', JSON.stringify(data.refresh)); // VERY BAD PRACTICE
+                            localStorage.setItem('Access', data.access); // VERY BAD PRACTICE
+                            localStorage.setItem('Refresh', data.refresh); // VERY BAD PRACTICE
                             // https://dev.to/perrydbucs/using-jwts-for-authentication-in-restful-applications-55hc  -  GOOD practice
                             window.location.href = '/'; // it's success page
                         },

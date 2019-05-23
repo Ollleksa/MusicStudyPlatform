@@ -184,3 +184,6 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = MusicStudyPlatform.secret_data.EMAIL_HOST_USER
 EMAIL_HOST_PASSWORD = MusicStudyPlatform.secret_data.EMAIL_HOST_PASSWORD
 EMAIL_PORT = 587
+
+# Celery
+CELERY_BROKER_URL = 'redis://localhost'
