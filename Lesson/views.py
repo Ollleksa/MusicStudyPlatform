@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.views import View
 from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator
+from django.shortcuts import get_object_or_404
 
 from .models import Lesson
 from .forms import NewLesson
@@ -22,12 +23,11 @@ class HomePage(View):
         return render(request, self.template, context)
 
 
-class JsLessonPage(View):
+class JsTempLessonPage(View):
     template = 'model/js_lesson.html'
 
     def get(self, request, **kwargs):
         return render(request, self.template)
-
 
 
 class LessonPage(View):
@@ -39,6 +39,26 @@ class LessonPage(View):
             'lesson': lesson,
         }
         return render(request, self.template, context)
+
+
+class JsLessonPage(View):
+    template = 'model/js_onelesson.html'
+
+    def get(self, request, **kwargs):
+        lesson_id = kwargs['lesson_id']
+        author = get_object_or_404(Lesson.objects.filter(id=lesson_id), id=lesson_id).author
+        context = {
+            'lesson_id': lesson_id,
+            'author': author,
+        }
+        return render(request, self.template, context)
+
+
+class JsLessonCatalogPage(View):
+    template = 'model/js_all_lessons.html'
+
+    def get(self, request, **kwargs):
+        return render(request, self.template)
 
 
 class LessonCatalog(View):

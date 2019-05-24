@@ -69,6 +69,15 @@ class LoginPage(View):
         return render(request, self.template, context)
 
 
+class LogoutPage(View):
+    template = 'auth/logout.html'
+
+    def get(self, request):
+        context = {}
+        logout(request)
+        return render(request, self.template, context)
+
+
 class JSLoginPage(View):
     template = 'auth/js_signin.html'
 
@@ -87,11 +96,3 @@ class JSSignUpPage(View):
 
     def post(self, request):
         return render(request, self.template)
-
-class LogoutPage(View):
-    template = 'auth/logout.html'
-
-    def get(self, request):
-        context = {}
-        logout(request)
-        return render(request, self.template, context)

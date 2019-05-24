@@ -5,11 +5,12 @@ from .views import SignUpPage, LoginPage, LogoutPage, JSLoginPage, JSSignUpPage
 from .api_views import UserViewSet, SignUpViewSet, FileUploadView
 
 urlpatterns = [
-    path('login/', LoginPage.as_view(), name='login'),
-    path('js_login', JSLoginPage.as_view()),
-    path('js_sign_up', JSSignUpPage.as_view()),
-    path('signup/', SignUpPage.as_view(), name='signup'),
+    path('login/', LoginPage.as_view()),
+    path('signup/', SignUpPage.as_view()),
     path('logout/', LogoutPage.as_view(), name='logout'),
+
+    path('js_login', JSLoginPage.as_view(), name='login'),
+    path('js_signup', JSSignUpPage.as_view(), name='signup'),
 ]
 
 api_patterns = [

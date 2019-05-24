@@ -37,7 +37,7 @@ class SignUpViewSet(viewsets.ViewSet):
         ser.is_valid(raise_exception=True)
         user = ser.save()
 
-        email_send.delay(user.id)
+        #email_send.delay(user.id)
 
         return Response(ser.data)
 

@@ -1,6 +1,6 @@
 from django.urls import path
 
-from .views import HomePage, LessonPage, CreateLessonPage, LessonCatalog, JsLessonPage
+from .views import HomePage, LessonPage, CreateLessonPage, LessonCatalog, JsLessonPage, JsLessonCatalogPage
 from .api_views import LessonViewSet, LikeViewSet, FileUploadView
 
 urlpatterns = [
@@ -8,7 +8,9 @@ urlpatterns = [
     path('lesson/<int:lesson_id>', LessonPage.as_view()),
     path('lesson/create', CreateLessonPage.as_view(), name='create_lesson'),
     path('lesson', LessonCatalog.as_view(), name='lessons_all'),
-    path('js_lesson', JsLessonPage.as_view())
+
+    path('js_lesson/<int:lesson_id>', JsLessonPage.as_view()),
+    path('js_lessons', JsLessonCatalogPage.as_view()),
 ]
 
 api_patterns = [

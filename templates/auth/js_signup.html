@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Registration Form Using jQuery - Demo Preview</title>
+        <title>MusicStudyPlatform - Sign Up</title>
         <meta name="robots" content="noindex, nofollow">
 <!-- Include CSS File Here -->
         <link rel="stylesheet" href="templates/auth/style.css"/>
@@ -35,7 +35,7 @@
                             password: password,
                         },
                         success: function (data) {
-
+                            window.location.href = '/'; // it's success page
                         },
                         error: function (data) {
                         if (data.status_code == 403) {
@@ -53,8 +53,8 @@
         <div class="container">
         <div class="main">
         <form class="form" method="post" action="#">
-            <h2>Registration Form Using jQuery</h2>
-            <label>Name :</label>
+            <h2>Registration form:</h2>
+            <label>Username :</label>
             <input type="text" name="dname" id="name">
             <label>Email :</label>
             <input type="text" name="demail" id="email">

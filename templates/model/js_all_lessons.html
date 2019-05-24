@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+ <head>
+   <meta charset="UTF-8">
+   <title>MusicStudyPlatform - Lessons</title>
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   <script type="text/javascript">
+    $.ajax({
+             url : "http://127.0.0.1:8000/api/lesson/all",
+             dataType : "json",
+             beforeSend : function( xhr ) {
+                      var token = localStorage.getItem('Access');
+                      xhr.setRequestHeader( 'Authorization', 'Bearer ' +  token);
+             },
+             success : function (data) {
+                      for (var i = 0, len = data.length; i < len; i++) {
+                            console.log(data[i]);
+                            $("div").append(data[i].title.toString())
+                            $("div").append("<br>")
+                       }
+                    }
+                 })
+    </script>
+ </head>
+<body>
+
+
+<div id="jsonresp" style="margin-top: 100px">
+   <p><label> Title :</label> <span id="title"></span></p>
+   <p><label> Content :</label> <span id="content"></span></p>
+   <p><label> Author :</label> <span id="author"></span></p>
+   <p><label> likes : </label> <span id="likes"></span></p>
+    <p><label> Avatar: </label> <img id="avatar" src="avatar"></p>
+    <p><label> Header: </label> <img id="header" src="avatar"></p>
+</div>
+
+</body>
+</html>
+

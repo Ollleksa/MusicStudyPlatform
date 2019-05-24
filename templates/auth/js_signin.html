@@ -1,6 +1,7 @@
 <!--Login form-->
 <html>
 <head>
+    <title>MusicStudyPlatform - Log In</title>
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
             crossorigin="anonymous"></script>
 </head>
@@ -42,23 +43,18 @@
                         },
                         success: function (data) {
                             console.log(data);
-                            // if response - OK
                             console.log('Hello');
                             console.log(data.access);
                             localStorage.setItem('Access', data.access); // VERY BAD PRACTICE
                             localStorage.setItem('Refresh', data.refresh); // VERY BAD PRACTICE
-                            // https://dev.to/perrydbucs/using-jwts-for-authentication-in-restful-applications-55hc  -  GOOD practice
                             window.location.href = '/'; // it's success page
                         },
-                    error: function (data) {
-                        // if response - Bad
-                        if (data.status_code == 403) {
+                        error: function (data) {
                             alert("Username or password is incorrect!");
-                        }
-                    },
-                    complete: function () {}
-                });
-            }
+                        },
+                        complete: function () {}
+                    });
+                }
         });
     </script>
 </body>
