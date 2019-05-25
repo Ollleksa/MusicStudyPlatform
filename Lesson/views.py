@@ -46,10 +46,8 @@ class JsLessonPage(View):
 
     def get(self, request, **kwargs):
         lesson_id = kwargs['lesson_id']
-        author = get_object_or_404(Lesson.objects.filter(id=lesson_id), id=lesson_id).author
         context = {
             'lesson_id': lesson_id,
-            'author': author,
         }
         return render(request, self.template, context)
 
@@ -58,6 +56,16 @@ class JsLessonCatalogPage(View):
     template = 'model/js_all_lessons.html'
 
     def get(self, request, **kwargs):
+        return render(request, self.template)
+
+
+class JsImageLoadLessonPage(View):
+    template = 'model/load_file.html'
+
+    def get(self, request, **kwargs):
+        return render(request, self.template)
+
+    def post(self, request, **kwargs):
         return render(request, self.template)
 
 

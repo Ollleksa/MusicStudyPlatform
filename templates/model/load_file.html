@@ -1,0 +1,33 @@
+<form action="http://127.0.0.1:8000/js_load"
+      method="post"
+      enctype="multipart/form-data">
+    {% csrf_token %}
+    <input name="image" type="file" id="image">
+    <input type="submit">
+</form>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<script>
+    $('form').submit(function(e) {
+        var formData = new FormData();
+        formData.append('file', $('#image')[0].files[0]);
+        var token = localStorage.getItem('Access');
+        $.ajax({
+            url: '/api/lesson/25/put_photo',
+            type: $(this).attr('method'),
+            data: formData,
+            beforeSend : function( xhr ) {
+                 console.log(formData.get('file'));
+                 console.log(token);
+                 xhr.setRequestHeader('Authorization', 'Bearer ' +  token);
+                 xhr.setRequestHeader('Content-Disposition', 'attachment; filename="58sdsdsd77.png"');
+            },
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function() {},
+        });
+        e.preventDefault();
+    });
+</script>

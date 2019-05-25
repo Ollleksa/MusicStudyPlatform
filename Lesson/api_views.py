@@ -2,13 +2,28 @@ from django.shortcuts import get_object_or_404
 
 from rest_framework import viewsets
 from rest_framework import views
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.parsers import FileUploadParser
+from rest_framework.parsers import FileUploadParser, MultiPartParser
+from rest_framework.pagination import PageNumberPagination
 
 from .models import Lesson, Like
 from .serializers import LessonSerializer, LikeSerializer
+
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 20
+
+
+class AllLessonsView(generics.ListAPIView):
+    queryset = Lesson.objects.all()
+    permission_classes = (IsAuthenticated,)
+    pagination_class = StandardResultsSetPagination
+    serializer_class = LessonSerializer
 
 
 class LessonViewSet(viewsets.ViewSet):
@@ -84,10 +99,12 @@ class LikeViewSet(viewsets.ViewSet):
 
 
 class FileUploadView(views.APIView):
-    parser_classes = (FileUploadParser,)
+    #parser_classes = (FileUploadParser,)
+    parser_classes = (MultiPartParser,)
     permission_classes = (IsAuthenticated,)
 
-    def put(self, request, lesson_id=None):
+    def post(self, request, lesson_id=None):
+        print('Hello!', request)
         queryset = Lesson.objects.all()
         lesson = get_object_or_404(queryset, id=lesson_id)
         if lesson.author != self.request.user:
@@ -97,7 +114,8 @@ class FileUploadView(views.APIView):
             file = request.data['file']
         except KeyError:
             raise KeyError('Request has no avatar attached')
-
+        print(file.content_type)
+        #print(file.read())
         lesson.header_image.save(file.name, file, save=True)
 
         return Response(status.HTTP_202_ACCEPTED)

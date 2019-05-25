@@ -1,7 +1,7 @@
 from django.urls import path
 
-from .views import HomePage, LessonPage, CreateLessonPage, LessonCatalog, JsLessonPage, JsLessonCatalogPage
-from .api_views import LessonViewSet, LikeViewSet, FileUploadView
+from .views import HomePage, LessonPage, CreateLessonPage, LessonCatalog, JsLessonPage, JsLessonCatalogPage, JsImageLoadLessonPage
+from .api_views import LessonViewSet, LikeViewSet, FileUploadView, AllLessonsView
 
 urlpatterns = [
     path('', HomePage.as_view(), name='index'),
@@ -11,10 +11,12 @@ urlpatterns = [
 
     path('js_lesson/<int:lesson_id>', JsLessonPage.as_view()),
     path('js_lessons', JsLessonCatalogPage.as_view()),
+    path('js_load', JsImageLoadLessonPage.as_view()),
+
 ]
 
 api_patterns = [
-    path('all', LessonViewSet.as_view({'get': 'list'}), name='api_lessons'),
+    path('all', AllLessonsView.as_view(), name='api_lessons'),
     path('user/<int:user_id>', LessonViewSet.as_view({'get': 'list_by_user'})),
     path('<int:lesson_id>', LessonViewSet.as_view({'get': 'get', 'delete': 'delete'})),
     path('create', LessonViewSet.as_view({'post': 'create'}), name='lesson'),

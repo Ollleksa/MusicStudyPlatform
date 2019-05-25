@@ -13,11 +13,13 @@
                       xhr.setRequestHeader( 'Authorization', 'Bearer ' +  token);
              },
              success : function (data) {
+                      console.log(data)
                       $('#title').text( data.title );
                       $('#content').text( data.content );
-                      $('#author').text( "{{ author.username }}" );
-                      $('#avatar').attr("src", "..{{ author.avatar.url }}" );
+                      $('#author').text( data.author.username );
+                      $('#avatar').attr("src", data.author.avatar );
                       $('#likes').text( data.timestamp );
+                      console.log(data.header_image);
                       $('#header').attr("src", data.header_image );
                     }
                  })
@@ -32,7 +34,7 @@
    <p><label> Author :</label> <span id="author"></span></p>
    <p><label> likes : </label> <span id="likes"></span></p>
     <p><label> Avatar: </label> <img id="avatar" src="avatar"></p>
-    <p><label> Header: </label> <img id="header" src="avatar"></p>
+    <p><label> Header: </label> <img id="header" src="header"></p>
 </div>
 
 </body>
