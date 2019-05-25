@@ -1,11 +1,17 @@
-<!--Login form-->
-<html>
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}
 <head>
     <title>MusicStudyPlatform - Log In</title>
+     <link rel="stylesheet" href="{% static 'first.css' %}" type="text/css">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
             crossorigin="anonymous"></script>
 </head>
-<body>
+{% endblock %}
+{% block content %}
+{% block admin %}
+{% endblock %}
     <!--<form action="/login" method="post">-->
     <form id="id_form" action="javascript:;" onsubmit="loginFormOnSubmit(this);">
         <label for="id_login">Username :</label>
@@ -45,8 +51,8 @@
                             console.log(data);
                             console.log('Hello');
                             console.log(data.access);
-                            localStorage.setItem('Access', data.access); // VERY BAD PRACTICE
-                            localStorage.setItem('Refresh', data.refresh); // VERY BAD PRACTICE
+                            localStorage.setItem('Access', data.access);
+                            localStorage.setItem('Refresh', data.refresh);
                             window.location.href = '/'; // it's success page
                         },
                         error: function (data) {
@@ -57,5 +63,4 @@
                 }
         });
     </script>
-</body>
-</html>
+{% endblock %}

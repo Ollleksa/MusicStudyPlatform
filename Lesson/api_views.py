@@ -20,7 +20,7 @@ class StandardResultsSetPagination(PageNumberPagination):
 
 
 class AllLessonsView(generics.ListAPIView):
-    queryset = Lesson.objects.all()
+    queryset = Lesson.objects.all().order_by('-timestamp')
     permission_classes = (IsAuthenticated,)
     pagination_class = StandardResultsSetPagination
     serializer_class = LessonSerializer

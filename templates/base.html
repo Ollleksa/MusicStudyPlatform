@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 {% load static %}
 <html>
+{% block title %}
 <head>
-    <title>MusicPlatform{% block title %}{% endblock %}</title>
+    <title>MusicPlatform</title>
     <link rel="stylesheet" href="{% static 'first.css' %}" type="text/css">
 </head>
+{% endblock %}
 
 <body>
 <header>

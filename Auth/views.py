@@ -96,3 +96,13 @@ class JSSignUpPage(View):
 
     def post(self, request):
         return render(request, self.template)
+
+
+class JSLoadPage(View):
+    template = 'auth/load_avatar.html'
+
+    def get(self, request):
+        return render(request, self.template)
+
+    def post(self, request):
+        return render(request, self.template)

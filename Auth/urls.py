@@ -1,7 +1,7 @@
 from django.urls import path
 from rest_framework_simplejwt import views as jwt_views
 
-from .views import SignUpPage, LoginPage, LogoutPage, JSLoginPage, JSSignUpPage
+from .views import SignUpPage, LoginPage, LogoutPage, JSLoginPage, JSSignUpPage, JSLoadPage
 from .api_views import UserViewSet, SignUpViewSet, FileUploadView
 
 urlpatterns = [
@@ -11,6 +11,7 @@ urlpatterns = [
 
     path('js_login', JSLoginPage.as_view(), name='login'),
     path('js_signup', JSSignUpPage.as_view(), name='signup'),
+    path('js_load_avatar', JSLoadPage.as_view(), name='load_avatar')
 ]
 
 api_patterns = [

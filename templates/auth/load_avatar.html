@@ -1,0 +1,51 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}
+<head>
+    <title>MusicStudyPlatform - Sign Up, Load avatar.</title>
+     <link rel="stylesheet" href="{% static 'first.css' %}" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
+</head>
+{% endblock %}
+{% block content %}
+{% block admin %}
+{% endblock %}
+
+<form action="."
+      method="post"
+      enctype="multipart/form-data">
+    {% csrf_token %}
+    <input name="image" type="file" id="image">
+    <input type="submit">
+</form>
+
+<script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+
+<script>
+    $('form').submit(function(e) {
+        var formData = new FormData();
+        formData.append('file', $('#image')[0].files[0]);
+        var token = localStorage.getItem('Access');
+        $.ajax({
+            url: '/api/auth/put_file',
+            type: $(this).attr('method'),
+            data: formData,
+            beforeSend : function( xhr ) {
+                 console.log(formData.get('file'));
+                 console.log(token);
+                 xhr.setRequestHeader('Authorization', 'Bearer ' +  token);
+                 xhr.setRequestHeader('Content-Disposition', 'attachment; filename="new_avatar.png"');
+            },
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function() {
+                window.location.href = '/';
+            },
+        });
+        e.preventDefault();
+    });
+</script>
+{% endblock %}

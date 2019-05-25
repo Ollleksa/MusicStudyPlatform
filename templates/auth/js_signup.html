@@ -1,10 +1,12 @@
-<!DOCTYPE html>
-<html>
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}
     <head>
         <title>MusicStudyPlatform - Sign Up</title>
         <meta name="robots" content="noindex, nofollow">
 <!-- Include CSS File Here -->
-        <link rel="stylesheet" href="templates/auth/style.css"/>
+         <link rel="stylesheet" href="{% static 'first.css' %}" type="text/css">
 <!-- Include JS File Here -->
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
         <script type="text/javascript">
@@ -22,6 +24,7 @@
                     alert("Your passwords don't match. Try again?");
                 } else {
                     sign_up_ajax(name, email, password);
+                    log_in_ajax(name, password);
                 }
                 });
 
@@ -35,7 +38,7 @@
                             password: password,
                         },
                         success: function (data) {
-                            window.location.href = '/'; // it's success page
+                            //window.location.href = '/auth/js_load_avatar'; // it's success page
                         },
                         error: function (data) {
                         if (data.status_code == 403) {
@@ -45,25 +48,45 @@
                     complete: function () {}
                 });
                 }
+
+                function log_in_ajax (name, password) {
+                    var request = $.ajax({
+                        url: "/api/auth/token/",
+                        type: "POST",
+                        data: {
+                            username: name,
+                            password: password,
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            console.log('Hello');
+                            console.log(data.access);
+                            localStorage.setItem('Access', data.access);
+                            localStorage.setItem('Refresh', data.refresh);
+                            window.location.href = '/auth/js_load_avatar'; // it's success page
+                        },
+                });
+                }
             });
         </script>
     </head>
-
-    <body>
+{% endblock %}
+{% block content %}
+{% block admin %}
+{% endblock %}
         <div class="container">
         <div class="main">
         <form class="form" method="post" action="#">
             <h2>Registration form:</h2>
-            <label>Username :</label>
-            <input type="text" name="dname" id="name">
-            <label>Email :</label>
-            <input type="text" name="demail" id="email">
-            <label>Password :</label>
-            <input type="password" name="password" id="password">
-            <label>Confirm Password :</label>
-            <input type="password" name="cpassword" id="cpassword">
-            <input type="button" name="register" id="register" value="Register">
+            <div><label>Username :</label>
+            <input type="text" name="dname" id="name"></div>
+            <div><label>Email :</label>
+            <input type="text" name="demail" id="email"></div>
+            <div><label>Password :</label>
+            <input type="password" name="password" id="password"></div>
+            <div><label>Confirm Password :</label>
+            <input type="password" name="cpassword" id="cpassword"></div>
+            <div><input type="button" name="register" id="register" value="Register"></div>
         </form>
         </div>
-    </body>
-</html>
+            {% endblock %}

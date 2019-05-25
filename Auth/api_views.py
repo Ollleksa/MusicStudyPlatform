@@ -8,7 +8,9 @@ from rest_framework import views
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.parsers import FileUploadParser
+from rest_framework.parsers import FileUploadParser, MultiPartParser
+
+from rest_framework_simplejwt.tokens import AccessToken
 
 from PIL import Image
 from celery import shared_task
@@ -37,7 +39,8 @@ class SignUpViewSet(viewsets.ViewSet):
         ser.is_valid(raise_exception=True)
         user = ser.save()
 
-        #email_send.delay(user.id)
+        email_send.delay(user.id)
+        token = AccessToken.for_user(self.user)
 
         return Response(ser.data)
 
@@ -83,10 +86,11 @@ class UserViewSet(viewsets.ViewSet):
 
 
 class FileUploadView(views.APIView):
-    parser_classes = (FileUploadParser,)
+    #parser_classes = (FileUploadParser,)
+    parser_classes = (MultiPartParser, )
     permission_classes = (IsAuthenticated,)
 
-    def put(self, request):
+    def post(self, request):
         try:
             file = request.data['file']
         except KeyError:
