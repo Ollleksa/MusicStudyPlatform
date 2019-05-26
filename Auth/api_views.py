@@ -86,7 +86,6 @@ class UserViewSet(viewsets.ViewSet):
 
 
 class FileUploadView(views.APIView):
-    #parser_classes = (FileUploadParser,)
     parser_classes = (MultiPartParser, )
     permission_classes = (IsAuthenticated,)
 

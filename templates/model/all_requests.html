@@ -1,41 +1,63 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}MusicPlatform - All requests{% endblock %}
+{% block title %}
+ <head>
+   <meta charset="UTF-8">
+   <title>MusicStudyPlatform - Requests</title>
+     <link rel="stylesheet" href="{% static 'first.css' %}" type="text/css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   <script type="text/javascript">
+   $( document ).ready(function() {
+    $.ajax({
+             url : "http://127.0.0.1:8000/api/request/all",
+             dataType : "json",
+             beforeSend : function( xhr ) {
+                      var token = localStorage.getItem('Access');
+                      console.log(token);
+                      xhr.setRequestHeader( 'Authorization', 'Bearer ' +  token);
+             },
+             success : function (data) {
+                      var token = localStorage.getItem('Access');
+                      if (token != null) {
+                            var ed = document.getElementById('edit');
+                            ed.innerHTML = '<a href="{% url 'create_lesson' %}">Add new lesson</a><a href="{% url 'create_request' %}">Add new request</a>';
+                            var logi = document.getElementById('loginout');
+                            logi.innerHTML = '<a href="{% url 'logout' %}">Logout</a>';
+                      };
+                      var table = document.getElementById('jsonresp');
+                      var pag = document.getElementById('pagi');
+                      if (data.previous != null){
+                            pag.innerHTML += '<a href="' + data.previous + '">Prev</a>';
+                            }
+                      if (data.next != null){
+                            pag.innerHTML += '<a href="' + data.next + '">Next</a>';
+                            }
 
-{% block content %}
-<div class="center">
-<h2>All requests</h2>
-
-<div class="pagination">
-    <span class="step-links">
-        {% if requests.has_previous %}
-            <a href="?page=1">First</a>
-            <a href="?page={{ requests.previous_page_number }}">Previous</a>
-        {% endif %}
-
-        <span class="current">
-            Page {{ requests.number }}\{{ requests.paginator.num_pages }}
-        </span>
-
-        {% if requests.has_next %}
-            <a href="?page={{ requests.next_page_number }}">Next</a>
-            <a href="?page={{ requests.paginator.num_pages }}">Last</a>
-        {% endif %}
-    </span>
-</div>
-
-{% if requests %}
-<table class="center">
-    {% for request in requests %}
-    <tr>
-        <th>{{ request.timestamp }}</th>
-        <th><a href="/request/{{ request.id }} "> {{ request.title }} </a></th>
-        <th> by {{ request.requester }}</th>
-        <th> to {{ request.agent }}</th>
-    </tr>
-    {% endfor %}
-</table>
-{% endif %}
-
-</div>
+                      for (var i = 0, len = data.results.length; i < len; i++) {
+                            res = "<tr><th>" + data.results[i].timestamp.toString() + "</th><th>"
+                            + data.results[i].requester.username " + </th><th>"
+                            + data.results[i].agent.username + '</th><th><a href="request/' + data.results[i].id +
+                            '">' +  data.results[i].title.toString() +  "</a></th></tr>"
+                            table.innerHTML += res;
+                       }
+                    }
+                 });
+                 })
+    </script>
+ </head>
 {% endblock %}
+{% block content %}
+<div id="pagi" class="center"></div>
+
+<table id="jsonresp" class="center">
+    <tr>
+    <th> Time </th>
+    <th> Requester </th>
+    <th> Agent </th>
+    <th> Title </th>
+    </tr>
+</table>
+
+{% endblock %}
+

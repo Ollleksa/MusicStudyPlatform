@@ -3,10 +3,10 @@ from django.shortcuts import get_object_or_404
 from rest_framework import viewsets
 from rest_framework import views
 from rest_framework import generics
-from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.parsers import FileUploadParser, MultiPartParser
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.parsers import MultiPartParser
 from rest_framework.pagination import PageNumberPagination
 
 from .models import Lesson, Like
@@ -21,7 +21,7 @@ class StandardResultsSetPagination(PageNumberPagination):
 
 class AllLessonsView(generics.ListAPIView):
     queryset = Lesson.objects.all().order_by('-timestamp')
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     pagination_class = StandardResultsSetPagination
     serializer_class = LessonSerializer
 
@@ -99,7 +99,6 @@ class LikeViewSet(viewsets.ViewSet):
 
 
 class FileUploadView(views.APIView):
-    #parser_classes = (FileUploadParser,)
     parser_classes = (MultiPartParser,)
     permission_classes = (IsAuthenticated,)
 
@@ -114,8 +113,6 @@ class FileUploadView(views.APIView):
             file = request.data['file']
         except KeyError:
             raise KeyError('Request has no avatar attached')
-        print(file.content_type)
-        #print(file.read())
         lesson.header_image.save(file.name, file, save=True)
 
         return Response(status.HTTP_202_ACCEPTED)

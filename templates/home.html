@@ -1,19 +1,51 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block content %}
-<h2>Welcome to main page {{ user.username }}!</h2>
+{% block title %}
+   <meta charset="UTF-8">
+   <title>MusicStudyPlatform - Home</title>
+     <link rel="stylesheet" href="{% static 'first.css' %}" type="text/css">
+   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+   <script type="text/javascript">
+    $.ajax({
+             url : "http://127.0.0.1:8000/api/lesson/all",
+             dataType : "json",
+             beforeSend : function( xhr ) {
+                      var token = localStorage.getItem('Access');
+                      if (token != null) {
+                        console.log(token);
+                        xhr.setRequestHeader( 'Authorization', 'Bearer ' +  token);
+                      };
+             },
+             success : function (data) {
+                      var token = localStorage.getItem('Access');
+                      if (token != null) {
+                            var ed = document.getElementById('edit');
+                            ed.innerHTML = '<a href="{% url 'create_lesson' %}">Add new lesson</a><a href="{% url 'create_request' %}">Add new request</a>';
+                            var logi = document.getElementById('loginout');
+                            logi.innerHTML = '<a href="{% url 'logout' %}">Logout</a>';
+                      };
 
-{% if lesson_list %}
-<h3>Latest lessons:</h3>
-<table class="center">
-    {% for lesson in lesson_list %}
-    <tr>
-    <th> {{ lesson.timestamp }} </th>
-    <th> {{ lesson.author }} </th>
-    <th> <a href="lesson/{{ lesson.id }}">{{ lesson.title }}</a> </th>
-    </tr>
-    {% endfor %}
-</table>
-{% endif %}
-
+                      var div = document.getElementById('jsonresp');
+                      for (var i = 0, len = data.results.length; i < len; i++) {
+                            res = "<tr><th>" + data.results[i].timestamp.toString() + "</th><th>"
+                            + data.results[i].author.username + '</th><th><a href="lesson/' + data.results[i].id +
+                            '">' +  data.results[i].title.toString() +  "</a></th></tr>"
+                            div.innerHTML += res;
+                       }
+                    }
+                 });
+    </script>
 {% endblock %}
+{% block content %}
+
+
+<table id="jsonresp" class="center">
+    <tr>
+    <th> Time </th>
+    <th> Author </th>
+    <th> Title </th>
+    </tr>
+</table>
+{% endblock %}
+

@@ -1,4 +1,4 @@
-from django.test import TestCase, Client
+from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
@@ -25,33 +25,19 @@ class UserCreationTestCase(TestCase):
         self.assertTrue(PlatformUser.objects.get(username=self.name).is_admin)
 
 
-class LogInOut(TestCase):
-    def setUp(self):
-        self.c = Client()
-        self.name = 'test'
-        self.email = 'test@test.test'
-        self.pword = 'Some11pass'
-        PlatformUser.objects.create_user(username='oleksa', email='let@it.be', password='some11pass')
-
-    def test_login(self):
-        response = self.c.post('/auth/login/', {'username': 'oleksa', 'password': 'some11pass'})
-        self.assertRedirects(response, '/', status_code=302, target_status_code=200, msg_prefix='',
-                             fetch_redirect_response=True)
-
-
 class APITestUser(APITestCase):
 
     def setUp(self):
         self.name, self.email, self.password = "oleks", "test@test.test", "11testes"
         self.user = PlatformUser.objects.create_user(self.name, self.email, self.password)
 
-    def test_sign_up(self):
-        data = {"username": "new_name", "email": "real@mail.com", "password": self.password}
-        resp = self.client.post(
-            reverse('sign_up'),
-            data=data
-        )
-        self.assertTrue(PlatformUser.objects.filter(username="new_name").exists())
+    # def test_sign_up(self):
+    #     data = {"username": "new_name", "email": "real@mail.com", "password": self.password}
+    #     resp = self.client.post(
+    #         reverse('sign_up'),
+    #         data=data
+    #     )
+    #     self.assertTrue(PlatformUser.objects.filter(username="new_name").exists())
 
     def test_sign_up_short_password(self):
         with self.assertRaises(ValidationError):
