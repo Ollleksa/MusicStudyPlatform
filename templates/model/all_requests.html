@@ -27,6 +27,7 @@
                       };
                       var table = document.getElementById('jsonresp');
                       var pag = document.getElementById('pagi');
+                      console.log(data);
                       if (data.previous != null){
                             pag.innerHTML += '<a href="' + data.previous + '">Prev</a>';
                             }
@@ -34,11 +35,11 @@
                             pag.innerHTML += '<a href="' + data.next + '">Next</a>';
                             }
 
-                      for (var i = 0, len = data.results.length; i < len; i++) {
-                            res = "<tr><th>" + data.results[i].timestamp.toString() + "</th><th>"
-                            + data.results[i].requester.username " + </th><th>"
-                            + data.results[i].agent.username + '</th><th><a href="request/' + data.results[i].id +
-                            '">' +  data.results[i].title.toString() +  "</a></th></tr>"
+                      for (var i = 0, len = data.length; i < len; i++) {
+                            res = "<tr><th>" + data[i].timestamp.toString() + "</th><th>"
+                            + data[i].requester.username + "</th><th>"
+                            + data[i].agent.username + '</th><th><a href="' + data[i].id +
+                            '">' +  data[i].title.toString() +  "</a></th></tr>"
                             table.innerHTML += res;
                        }
                     }

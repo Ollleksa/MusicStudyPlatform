@@ -22,7 +22,6 @@ class AuthorSerializer(serializers.ModelSerializer):
 
 
 class LessonSerializer(serializers.ModelSerializer):
-    #author = serializers.PrimaryKeyRelatedField(queryset=get_user_model().objects.all(), default=CurrentUserDefault())
     author = AuthorSerializer(many=False, required=False)
 
     class Meta:

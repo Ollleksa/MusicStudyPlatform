@@ -10,6 +10,7 @@
         <script type="text/javascript">
             $(document).ready(function() {
                 var token = localStorage.getItem('Access');
+                console.log(token);
                  if (token != null) {
                             var ed = document.getElementById('edit');
                             ed.innerHTML = '<a href="{% url 'create_lesson' %}">Add new lesson</a><a href="{% url 'create_request' %}">Add new request</a>';
@@ -23,11 +24,11 @@
                 if (title == '' || content == '' ) {
                     alert("Please fill all fields...!!!!!!");
                 } else {
-                    create_lesson_ajax(title, content, agent);
+                    create_request_ajax(title, content, agent);
                 }
                 });
 
-                function create_lesson_ajax (title, content) {
+                function create_request_ajax (title, content, agent) {
                     var request = $.ajax({
                         url: "/api/request/create",
                         type: "POST",
@@ -65,7 +66,7 @@
             <input type="text" name="dtitle" id="title"></div>
             <div><label>Content :</label>
             <input type="text" name="dcontent" id="content"></div>
-            <div><label>Agent:</label>
+            <div><label>Agent :</label>
             <input type="text" name="dagent" id="agent"></div>
             <div><input type="button" name="create" id="create" value="Create"></div>
         </form>

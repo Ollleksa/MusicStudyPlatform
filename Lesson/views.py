@@ -6,12 +6,7 @@ class HomePage(View):
     template = 'home.html'
 
     def get(self, request, **kwargs):
-
-        context = {
-            'user': request.user
-        }
-        print(request.user)
-        return render(request, self.template, context)
+        return render(request, self.template)
 
 
 class LessonPage(View):

@@ -34,12 +34,6 @@ class ApiTestCase(APITestCase):
         )
         self.assertEqual(resp.status_code, 200)
 
-    def test_get_not_auth(self):
-        resp = self.client.get(
-            reverse('api_lessons'),
-        )
-        self.assertEqual(resp.status_code, 401)
-
     def test_get_one_lesson(self):
         token = AccessToken.for_user(self.user)
         resp = self.client.get(

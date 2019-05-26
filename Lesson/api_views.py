@@ -5,7 +5,7 @@ from rest_framework import views
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, AllowAny
 from rest_framework.parsers import MultiPartParser
 from rest_framework.pagination import PageNumberPagination
 
@@ -27,7 +27,7 @@ class AllLessonsView(generics.ListAPIView):
 
 
 class LessonViewSet(viewsets.ViewSet):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def list(self, request):
         queryset = Lesson.objects.all()
