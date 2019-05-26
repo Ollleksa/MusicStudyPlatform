@@ -27,21 +27,70 @@
                       $('#content').text( data.content );
                       $('#author').text( data.author.username );
                       $('#avatar').attr("src", data.author.avatar );
-                      $('#likes').text( data.timestamp );
-                      console.log(data.header_image);
+                      $('#time').text( data.timestamp );
                       $('#header').attr("src", data.header_image );
                     }
-                 })
+                 });
+
+                 $.ajax({
+             url : "http://127.0.0.1:8000/api/lesson/{{ lesson_id }}/likes",
+             dataType : "json",
+             beforeSend : function( xhr ) {
+                      var token = localStorage.getItem('Access');
+                      xhr.setRequestHeader( 'Authorization', 'Bearer ' +  token);
+             },
+             success : function (data) {
+                      $('#likes').text( data.length );
+                    }
+                 });
+               $(document).ready(function() {
+                 $("#like").click(function() {
+                var request = $.ajax({
+                        url: "http://127.0.0.1:8000/api/lesson/{{ lesson_id }}/likes",
+                        type: "POST",
+                        beforeSend : function( xhr ) {
+                            var token = localStorage.getItem('Access');
+                            xhr.setRequestHeader( 'Authorization', 'Bearer ' +  token);
+                        },
+                        success: function (data) {
+                            window.location.href = '.';
+                        },
+                });
+                });
+                $("#unlike").click(function() {
+                var request = $.ajax({
+                        url: "http://127.0.0.1:8000/api/lesson/{{ lesson_id }}/likes",
+                        type: "DELETE",
+                        beforeSend : function( xhr ) {
+                            var token = localStorage.getItem('Access');
+                            xhr.setRequestHeader( 'Authorization', 'Bearer ' +  token);
+                        },
+                        success: function (data) {
+                            window.location.href = '.';
+                        },
+                });
+                });
+                });
     </script>
 {% endblock %}
+
 {% block content %}
 <div id="jsonresp" style="margin-top: 100px">
    <p><label> Title :</label> <span id="title"></span></p>
    <p><label> Content :</label> <span id="content"></span></p>
    <p><label> Author :</label> <span id="author"></span></p>
+    <p><label> Time :</label> <span id="time"></span></p>
    <p><label> likes : </label> <span id="likes"></span></p>
     <p><label> Avatar: </label> <img id="avatar" src="avatar"></p>
     <p><label> Header: </label> <img id="header" src="header"></p>
 </div>
+
+<form action="#" method="post">
+    <input type="button" name="like" id="like" value="Like">
+</form>
+
+<form action="#" method="delete">
+    <input type="button" name="unlike" id="unlike" value="UnLike">
+</form>
 {% endblock %}
 
