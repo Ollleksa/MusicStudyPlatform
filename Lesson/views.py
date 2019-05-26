@@ -22,12 +22,12 @@ class HomePage(View):
 
         return render(request, self.template, context)
 
+
 class JsHomePage(View):
     template = 'js_home.html'
 
     def get(self, request, **kwargs):
         return render(request, self.template)
-
 
 
 class JsTempLessonPage(View):
@@ -66,14 +66,32 @@ class JsLessonCatalogPage(View):
         return render(request, self.template)
 
 
-class JsImageLoadLessonPage(View):
-    template = 'model/load_file.html'
+class JSCreateLessonPage(View):
+    template = 'model/js_create_lesson.html'
 
     def get(self, request, **kwargs):
         return render(request, self.template)
 
     def post(self, request, **kwargs):
         return render(request, self.template)
+
+
+class JsImageLoadLessonPage(View):
+    template = 'model/load_file.html'
+
+    def get(self, request, **kwargs):
+        lesson_id = kwargs['lesson_id']
+        context = {
+            'lesson_id': lesson_id,
+        }
+        return render(request, self.template, context)
+
+    def post(self, request, **kwargs):
+        lesson_id = kwargs['lesson_id']
+        context = {
+            'lesson_id': lesson_id,
+        }
+        return render(request, self.template, context)
 
 
 class LessonCatalog(View):

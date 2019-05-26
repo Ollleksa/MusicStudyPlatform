@@ -14,7 +14,7 @@
         formData.append('file', $('#image')[0].files[0]);
         var token = localStorage.getItem('Access');
         $.ajax({
-            url: '/api/lesson/25/put_photo',
+            url: '/api/lesson/{{ lesson_id }}/put_photo',
             type: $(this).attr('method'),
             data: formData,
             beforeSend : function( xhr ) {
@@ -26,7 +26,9 @@
             cache: false,
             contentType: false,
             processData: false,
-            success: function() {},
+            success: function() {
+                window.location.href = '/js_lesson/{{ lesson_id }}';
+            },
         });
         e.preventDefault();
     });
