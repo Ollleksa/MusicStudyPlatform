@@ -3,40 +3,48 @@
 
 {% block title %}
 <head>
-        <title>MusicStudyPlatform - Create Lesson</title>
-         <link rel="stylesheet" href="{% static 'first.css' %}" type="text/css">
-        <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <title>MusicStudyPlatform - Create Lesson</title>
+    <link rel="stylesheet" href="{% static 'first.css' %}" type="text/css">
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo="
+            crossorigin="anonymous"></script>
 
-<script>
-    $('form').submit(function(e) {
-        var formData = new FormData();
-        formData.append('file', $('#image')[0].files[0]);
-        var token = localStorage.getItem('Access');
-                 if (token != null) {
-                            var ed = document.getElementById('edit');
-                            ed.innerHTML = '<a href="{% url 'create_lesson' %}">Add new lesson</a><a href="{% url 'create_request' %}">Add new request</a>';
-                            var logi = document.getElementById('loginout');
-                            logi.innerHTML = '<a href="{% url 'logout' %}">Logout</a>';
-                 };
-        $.ajax({
-            url: '/api/lesson/{{ lesson_id }}/put_photo',
-            type: $(this).attr('method'),
-            data: formData,
-            beforeSend : function( xhr ) {
-                 xhr.setRequestHeader('Authorization', 'Bearer ' +  token);
-                 xhr.setRequestHeader('Content-Disposition', 'attachment; filename="58sdsdsd77.png"');
-            },
-            cache: false,
-            contentType: false,
-            processData: false,
-            success: function() {
-                window.location.href = '/lesson/{{ lesson_id }}';
-            },
+    <script>
+        $('form').submit(function(e) {
+            var formData = new FormData();
+            formData.append('file', $('#image')[0].files[0]);
+            var token = localStorage.getItem('Access');
+            if (token != null) {
+                var ed = document.getElementById('edit');
+                ed.innerHTML = '<a href="{% url 'create_lesson' %}">Add new lesson</a><a href="{% url 'create_request' %}">Add new request</a>';
+                var logi = document.getElementById('loginout');
+                logi.innerHTML = '<a href="{% url 'logout' %}">Logout</a>';
+            };
+
+            $.ajax({
+                url: '/api/lesson/{{ lesson_id }}/put_photo',
+                type: $(this).attr('method'),
+                data: formData,
+                beforeSend : function( xhr ) {
+                    xhr.setRequestHeader('Authorization', 'Bearer ' +  token);
+                    xhr.setRequestHeader('Content-Disposition', 'attachment; filename="some.png"');
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function() {
+                    window.location.href = '/lesson/{{ lesson_id }}';
+                },
+            });
+            e.preventDefault();
         });
-        e.preventDefault();
-    });
-</script>
-    </head>
+
+        $(document).ready(function() {
+            $("#skip").click(function() {
+                window.location.replace('/lesson/{{ lesson_id }}');
+            });
+        });
+    </script>
+</head>
 {% endblock %}
 
 {% block content %}
@@ -46,5 +54,9 @@
     {% csrf_token %}
     <input name="image" type="file" id="image">
     <input type="submit">
+</form>
+
+<form action="#" method="post">
+    <input type="button" name="skip" id="skip" value="Skip">
 </form>
 {% endblock %}

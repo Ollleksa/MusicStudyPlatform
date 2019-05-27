@@ -1,11 +1,11 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.core.exceptions import ValidationError
+
 from rest_framework.test import APITestCase
 from rest_framework import status
 from rest_framework_simplejwt.tokens import AccessToken
 from rest_framework_simplejwt.settings import api_settings
-from django.core.exceptions import ValidationError
-
 
 from .models import PlatformUser
 
@@ -142,16 +142,6 @@ class APITestUser(APITestCase):
         self.assertEqual(resp.status_code, 204)
         self.assertTrue(not PlatformUser.objects.filter(username=self.name).exists())
 
-    # def test_upload_file(self):
-    #     token = AccessToken.for_user(self.user)
-    #     resp = self.client.put(
-    #         reverse('file_upload'),
-    #         HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}'
-    #     )
-    #     self.assertEqual(resp.status_code, 204)
-    #     self.assertTrue(not PlatformUser.objects.filter(username=self.name).exists())
-
-    # For sudo will do later
     def test_create_user_by_api(self):
         self.user.is_admin = True
         self.user.save()

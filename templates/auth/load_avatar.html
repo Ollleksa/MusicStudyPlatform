@@ -21,6 +21,10 @@
     <input type="submit">
 </form>
 
+<form action="#" method="post">
+    <input type="button" name="skip" id="skip" value="Skip">
+</form>
+
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
 <script>
@@ -47,5 +51,11 @@
         });
         e.preventDefault();
     });
+
+    $(document).ready(function() {
+                 $("#skip").click(function() {
+                window.location.replace("/");
+                                });
+                });
 </script>
 {% endblock %}

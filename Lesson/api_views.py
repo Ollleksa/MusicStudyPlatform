@@ -71,7 +71,7 @@ class LessonViewSet(viewsets.ViewSet):
 
 
 class LikeViewSet(viewsets.ViewSet):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def list(self, request, lesson_id=None):
         queryset = Lesson.objects.all()

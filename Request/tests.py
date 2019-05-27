@@ -50,16 +50,6 @@ class RequestApiTestCase(APITestCase):
         )
         self.assertEqual(resp.status_code, 200)
 
-    # def test_request_creation_fail(self):
-    #     token = AccessToken.for_user(self.user)
-    #     data = {'title': '', 'content': 'Test_content'}
-    #     resp = self.client.post(
-    #         reverse('request'),
-    #         HTTP_AUTHORIZATION=f'{api_settings.AUTH_HEADER_TYPES[1]} {token}',
-    #         data=data,
-    #     )
-    #     self.assertEqual(resp.status_code, 400)
-
     def test_deletion(self):
         token = AccessToken.for_user(self.user)
         self.assertTrue(Request.objects.filter(id = self.new_request.id).exists())

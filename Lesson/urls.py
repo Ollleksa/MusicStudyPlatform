@@ -5,10 +5,10 @@ from .api_views import LessonViewSet, LikeViewSet, FileUploadView, AllLessonsVie
 
 urlpatterns = [
     path('', HomePage.as_view(), name='index'),
-    path('lesson/<int:lesson_id>/', LessonPage.as_view()),
     path('lessons', LessonCatalogPage.as_view(), name='lessons_all'),
-    path('lesson/<int:lesson_id>/image', ImageLoadLessonPage.as_view()),
     path('lesson/create', CreateLessonPage.as_view(), name='create_lesson'),
+    path('lesson/<int:lesson_id>/', LessonPage.as_view()),
+    path('lesson/<int:lesson_id>/image', ImageLoadLessonPage.as_view()),
 ]
 
 api_patterns = [

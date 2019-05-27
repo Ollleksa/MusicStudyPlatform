@@ -58,7 +58,8 @@ class RequestViewSet(viewsets.ViewSet):
         return Response(serializer.data)
 
     def create(self, request):
-        ser = RequestSerializer(data=self.request.data, context={'request': request, 'agent': self.request.data['agent']})
+        ser = RequestSerializer(data=self.request.data,
+                                context={'request': request, 'agent': self.request.data['agent']})
         ser.is_valid(raise_exception=True)
         ser.save()
         user = get_user_model().objects.get(username=ser.data['agent']['username'])

@@ -2,21 +2,20 @@
 {% load static %}
 
 {% block title %}
-    <head>
-        <title>MusicStudyPlatform - Create Lesson</title>
-         <link rel="stylesheet" href="{% static 'first.css' %}" type="text/css">
-<!-- Include JS File Here -->
-        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-        <script type="text/javascript">
-            $(document).ready(function() {
-                var token = localStorage.getItem('Access');
-                 if (token != null) {
-                            var ed = document.getElementById('edit');
-                            ed.innerHTML = '<a href="{% url 'create_lesson' %}">Add new lesson</a><a href="{% url 'create_request' %}">Add new request</a>';
-                            var logi = document.getElementById('loginout');
-                            logi.innerHTML = '<a href="{% url 'logout' %}">Logout</a>';
-                 };
-                $("#create").click(function() {
+<head>
+    <title>MusicStudyPlatform - Create Lesson</title>
+    <link rel="stylesheet" href="{% static 'first.css' %}" type="text/css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var token = localStorage.getItem('Access');
+            if (token != null) {
+                var ed = document.getElementById('edit');
+                ed.innerHTML = '<a href="{% url 'create_lesson' %}">Add new lesson</a><a href="{% url 'create_request' %}">Add new request</a>';
+                var logi = document.getElementById('loginout');
+                logi.innerHTML = '<a href="{% url 'logout' %}">Logout</a>';
+            };
+            $("#create").click(function() {
                 var title = $("#title").val();
                 var content = $("#content").val();
                 if (title == '' || content == '' ) {
@@ -24,46 +23,44 @@
                 } else {
                     create_lesson_ajax(title, content);
                 }
-                });
+            });
 
-                function create_lesson_ajax (title, content) {
-                    var request = $.ajax({
-                        url: "/api/lesson/create",
-                        type: "POST",
-                        data: {
-                            title: title,
-                            content: content,
-                        },
-                        beforeSend : function( xhr ) {
-                            var token = localStorage.getItem('Access');
-                            xhr.setRequestHeader( 'Authorization', 'Bearer ' +  token);
-                        },
-                        success: function (data) {
-                            console.log(data);
-                            window.location.href = '/lesson/' + data.id.toString() + '/image'; // it's success page
-                        },
-                        error: function (data) {
+            function create_lesson_ajax (title, content) {
+                var request = $.ajax({
+                    url: "/api/lesson/create",
+                    type: "POST",
+                    data: {
+                        title: title,
+                        content: content,
+                    },
+                    beforeSend : function( xhr ) {
+                        var token = localStorage.getItem('Access');
+                        xhr.setRequestHeader( 'Authorization', 'Bearer ' +  token);
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        window.location.href = '/lesson/' + data.id.toString() + '/image'; // it's success page
+                    },
+                    error: function (data) {
                         if (data.status_code == 403) {
                             alert("Something wrong, try again");
                         }
                     },
                     complete: function () {}
                 });
-                }
-            });
-        </script>
-    </head>
+            }
+        });
+    </script>
+</head>
 {% endblock %}
+
 {% block content %}
-        <div class="container">
-        <div class="main">
-        <form class="form" method="post" action="#">
-            <h2>Creation form:</h2>
-            <div><label>Title :</label>
-            <input type="text" name="dtitle" id="title"></div>
-            <div><label>Content :</label>
-            <input type="text" name="dcontent" id="content"></div>
-            <div><input type="button" name="create" id="create" value="Create"></div>
-        </form>
-        </div>
-            {% endblock %}
+<form class="form" method="post" action="#">
+    <h2>Creation form:</h2>
+    <div><label>Title :</label>
+        <input type="text" name="dtitle" id="title"></div>
+    <div><label>Content :</label>
+        <input type="text" name="dcontent" id="content"></div>
+    <div><input type="button" name="create" id="create" value="Create"></div>
+</form>
+{% endblock %}

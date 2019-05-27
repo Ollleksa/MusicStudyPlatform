@@ -2,40 +2,42 @@
 {% load static %}
 
 {% block title %}
-   <meta charset="UTF-8">
-   <title>MusicStudyPlatform - Home</title>
-     <link rel="stylesheet" href="{% static 'first.css' %}" type="text/css">
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-   <script type="text/javascript">
-    $.ajax({
-             url : "http://127.0.0.1:8000/api/lesson/all",
-             dataType : "json",
-             beforeSend : function( xhr ) {
-                      var token = localStorage.getItem('Access');
-                      if (token != null) {
-                        console.log(token);
-                        xhr.setRequestHeader( 'Authorization', 'Bearer ' +  token);
-                      };
-             },
-             success : function (data) {
-                      var token = localStorage.getItem('Access');
-                      if (token != null) {
-                            var ed = document.getElementById('edit');
-                            ed.innerHTML = '<a href="{% url 'create_lesson' %}">Add new lesson</a><a href="{% url 'create_request' %}">Add new request</a>';
-                            var logi = document.getElementById('loginout');
-                            logi.innerHTML = '<a href="{% url 'logout' %}">Logout</a>';
-                      };
+<head>
+    <meta charset="UTF-8">
+    <title>MusicStudyPlatform - Home</title>
+    <link rel="stylesheet" href="{% static 'first.css' %}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $.ajax({
+            url : "http://127.0.0.1:8000/api/lesson/all",
+            dataType : "json",
+            beforeSend : function( xhr ) {
+                var token = localStorage.getItem('Access');
+                if (token != null) {
+                    xhr.setRequestHeader( 'Authorization', 'Bearer ' +  token);
+                };
+            },
+            success : function (data) {
+                var token = localStorage.getItem('Access');
+                if (token != null) {
+                    var ed = document.getElementById('edit');
+                    ed.innerHTML = '<a href="{% url 'create_lesson' %}">Add new lesson</a><a href="{% url 'create_request' %}">Add new request</a>';
+                    var logi = document.getElementById('loginout');
+                    logi.innerHTML = '<a href="{% url 'logout' %}">Logout</a>';
+                };
 
-                      var div = document.getElementById('jsonresp');
-                      for (var i = 0, len = data.results.length; i < len; i++) {
-                            res = "<tr><th>" + data.results[i].timestamp.toString() + "</th><th>"
-                            + data.results[i].author.username + '</th><th><a href="lesson/' + data.results[i].id +
-                            '">' +  data.results[i].title.toString() +  "</a></th></tr>"
-                            div.innerHTML += res;
-                       }
-                    }
-                 });
+                var div = document.getElementById('jsonresp');
+                for (var i = 0, len = data.results.length; i < len; i++) {
+                    var time = data.results[i].timestamp.toString().slice(5, 16).replace('T', ' ');
+                    res = "<tr><th>" + time + "</th><th>"
+                        + data.results[i].author.username + '</th><th><a href="lesson/' + data.results[i].id +
+                        '">' +  data.results[i].title.toString() +  "</a></th></tr>"
+                    div.innerHTML += res;
+                }
+            }
+        });
     </script>
+</head>
 {% endblock %}
 {% block content %}
 

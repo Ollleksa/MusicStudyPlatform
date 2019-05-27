@@ -1,6 +1,5 @@
 from django.views import View
 from django.shortcuts import render
-from django.contrib.auth import logout, login, authenticate
 
 
 class LogoutPage(View):
@@ -8,7 +7,6 @@ class LogoutPage(View):
 
     def get(self, request):
         context = {}
-        logout(request)
         return render(request, self.template, context)
 
 

@@ -1,16 +1,14 @@
 from django.shortcuts import get_object_or_404
+from django.conf import settings
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
-from django.conf import settings
 
 from rest_framework import viewsets
 from rest_framework import views
-from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from rest_framework.parsers import MultiPartParser
-
-from rest_framework_simplejwt.tokens import AccessToken
 
 from PIL import Image
 from celery import shared_task
@@ -40,13 +38,12 @@ class SignUpViewSet(viewsets.ViewSet):
         user = ser.save()
 
         email_send.delay(user.id)
-        token = AccessToken.for_user(self.user)
 
         return Response(ser.data)
 
 
 class UserViewSet(viewsets.ViewSet):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def list(self, request):
         queryset = User.objects.all()
@@ -87,7 +84,7 @@ class UserViewSet(viewsets.ViewSet):
 
 class FileUploadView(views.APIView):
     parser_classes = (MultiPartParser, )
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def post(self, request):
         try:

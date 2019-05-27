@@ -24,7 +24,11 @@ class LessonCatalogPage(View):
     template = 'model/all_lessons.html'
 
     def get(self, request, **kwargs):
-        return render(request, self.template)
+        page = request.GET.get('page')
+        context = {
+            'page':page,
+        }
+        return render(request, self.template, context)
 
 
 class CreateLessonPage(View):

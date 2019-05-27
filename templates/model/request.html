@@ -2,40 +2,44 @@
 {% load static %}
 
 {% block title %}
- <head>
-   <meta charset="UTF-8">
-   <title>MusicStudyPlatform - Request #{{ request_id }}</title>
-     <link rel="stylesheet" href="{% static 'first.css' %}" type="text/css">
-   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-   <script type="text/javascript">
-    $.ajax({
-             url : "http://127.0.0.1:8000/api/request/{{ request_id }}",
-             dataType : "json",
-             beforeSend : function( xhr ) {
-                      var token = localStorage.getItem('Access');
-                      xhr.setRequestHeader( 'Authorization', 'Bearer ' +  token);
-             },
-             success : function (data) {
-                      console.log(data);
-                      var token = localStorage.getItem('Access');
-                 if (token != null) {
-                            var ed = document.getElementById('edit');
-                            ed.innerHTML = '<a href="{% url 'create_lesson' %}">Add new lesson</a><a href="{% url 'create_request' %}">Add new request</a>';
-                            var logi = document.getElementById('loginout');
-                            logi.innerHTML = '<a href="{% url 'logout' %}">Logout</a>';
-                 };
-                      $('#title').text( data.title );
-                      $('#content').text( data.content );
-                      $('#author').text( data.requester.username );
-                    }
-                 })
+<head>
+    <meta charset="UTF-8">
+    <title>MusicStudyPlatform - Request #{{ request_id }}</title>
+    <link rel="stylesheet" href="{% static 'first.css' %}" type="text/css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $.ajax({
+            url : "http://127.0.0.1:8000/api/request/{{ request_id }}",
+            dataType : "json",
+            beforeSend : function( xhr ) {
+                var token = localStorage.getItem('Access');
+                if (token != null) {
+                    xhr.setRequestHeader( 'Authorization', 'Bearer ' +  token);
+                };
+            },
+            success : function (data) {
+                var token = localStorage.getItem('Access');
+                if (token != null) {
+                    var ed = document.getElementById('edit');
+                    ed.innerHTML = '<a href="{% url 'create_lesson' %}">Add new lesson</a><a href="{% url 'create_request' %}">Add new request</a>';
+                    var logi = document.getElementById('loginout');
+                    logi.innerHTML = '<a href="{% url 'logout' %}">Logout</a>';
+                };
+                $('#title').text( data.title );
+                $('#content').text( data.content );
+                $('#author').text( data.requester.username );
+                $('#time').text( data.timestamp.toString().slice(5, 16).replace('T', ' ') );
+                $('#agent').text( data.agent.username);
+            }
+        })
     </script>
-{% endblock %}
-{% block content %}
-<div id="jsonresp" style="margin-top: 100px">
-   <p><label> Title :</label> <span id="title"></span></p>
-   <p><label> Content :</label> <span id="content"></span></p>
-   <p><label> Author :</label> <span id="author"></span></p>
-</div>
+</head>
 {% endblock %}
 
+{% block content %}
+<div id="jsonresp">
+    <p class="center"><label> Submitted by </label> <span id="author"></span> to <span id="agent"></span> at <span id="time"></span></p>
+    <h1 class="center"> <span id="title"></span></h1>
+    <p><span id="content"></span></p>
+</div>
+{% endblock %}
