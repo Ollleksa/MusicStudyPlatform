@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+{% block title %}
+<head>
+    <title>MusicPlatform</title>
+    <link rel="stylesheet" href="{% static 'first.css' %}" type="text/css">
+</head>
+{% endblock %}
+
+<body>
+<header>
+    <h2>MusicPlatform</h2>
+    <p>The best one.</p>
+</header>
+
+<nav>
+    <div class="navi">
+    {% block nav %}
+    <a href="{% url 'index' %}">Home</a>
+    <a href="{% url 'lessons_all' %}">Lessons</a>
+    <a href="{% url 'request_all' %}">Requests</a>
+    {% endblock %}
+    </div>
+    <div class="log" id="loginout">
+    <a href="{% url 'login' %}">Log In</a>
+    <a href="{% url 'signup' %}">Sign Up</a>
+    </div>
+</nav>
+
+<nav class="edit">
+    <div id="edit">
+    </div>
+</nav>
+
+<div class="main">
+{% block content %}
+{% endblock %}
+</div>
+
+
+<footer>
+    <p>Powered by <a href="https://www.djangoproject.com/">Django</a>. Written by Ollleksa.</p>
+    <p><a href="https://creativecommons.org/licenses/by-sa/3.0/"> CC BY-SA 3.0 license</a>.</p>
+</footer>
+</body>
+</html>

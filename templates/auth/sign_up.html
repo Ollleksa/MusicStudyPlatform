@@ -1,0 +1,78 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}
+<head>
+    <title>MusicStudyPlatform - Sign Up</title>
+    <link rel="stylesheet" href="{% static 'first.css' %}" type="text/css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            $("#register").click(function() {
+                var name = $("#name").val();
+                var email = $("#email").val();
+                var password = $("#password").val();
+                var cpassword = $("#cpassword").val();
+
+                if (name == '' || email == '' || password == '' || cpassword == '') {
+                    alert("Please fill all fields...!!!!!!");
+                } else if ((password.length) < 8) {
+                    alert("Password should atleast 8 character in length...!!!!!!");
+                } else if (!(password).match(cpassword)) {
+                    alert("Your passwords don't match. Try again?");
+                } else {
+                    sign_up_ajax(name, email, password);
+                    log_in_ajax(name, password);
+                }
+            });
+
+            function sign_up_ajax (name, email, password) {
+                var request = $.ajax({
+                    url: "/api/auth/signup/",
+                    type: "POST",
+                    data: {
+                        username: name,
+                        email: email,
+                        password: password,
+                    },
+                    success: function (data) {},
+                });
+            }
+
+            function log_in_ajax (name, password) {
+                var request = $.ajax({
+                    url: "/api/auth/token/",
+                    type: "POST",
+                    data: {
+                        username: name,
+                        password: password,
+                    },
+                    success: function (data) {
+                        localStorage.setItem('Access', data.access);
+                        localStorage.setItem('Refresh', data.refresh);
+                        window.location.href = '/auth/load_avatar'; // it's success page
+                    },
+                });
+             }
+        });
+</script>
+</head>
+{% endblock %}
+
+{% block content %}
+
+{% block admin %}
+{% endblock %}
+    <form class="form" method="post" action="#">
+    <h2>Registration form:</h2>
+        <div><label>Username :</label>
+            <input type="text" name="dname" id="name"></div>
+        <div><label>Email :</label>
+            <input type="text" name="demail" id="email"></div>
+        <div><label>Password :</label>
+            <input type="password" name="password" id="password"></div>
+        <div><label>Confirm Password :</label>
+            <input type="password" name="cpassword" id="cpassword"></div>
+        <div><input type="button" name="register" id="register" value="Register"></div>
+    </form>
+{% endblock %}

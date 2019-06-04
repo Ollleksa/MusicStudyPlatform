@@ -1,0 +1,21 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}
+<head>
+    <title>MusicStudyPlatform - LogOut</title>
+    <link rel="stylesheet" href="{% static 'first.css' %}" type="text/css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+        localStorage.clear();
+    </script>
+</head>
+{% endblock %}
+
+{% block content %}
+
+<p>Log out was successful!</p>
+<a href="{% url 'login' %}">LogIn</a>
+
+{% endblock %}

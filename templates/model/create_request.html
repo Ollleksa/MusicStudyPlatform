@@ -1,0 +1,72 @@
+{% extends '../base.html' %}
+{% load static %}
+
+{% block title %}
+<head>
+    <title>MusicStudyPlatform - Create Request</title>
+    <link rel="stylesheet" href="{% static 'first.css' %}" type="text/css">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript">
+            $(document).ready(function() {
+                var token = localStorage.getItem('Access');
+                console.log(token);
+                if (token != null) {
+                    var ed = document.getElementById('edit');
+                    ed.innerHTML = '<a href="{% url 'create_lesson' %}">Add new lesson</a><a href="{% url 'create_request' %}">Add new request</a>';
+                    var logi = document.getElementById('loginout');
+                    logi.innerHTML = '<a href="{% url 'logout' %}">Logout</a>';
+                };
+
+                $("#create").click(function() {
+                    var title = $("#title").val();
+                    var content = $("#content").val();
+                    var agent = $("#agent").val()
+                    if (title == '' || content == '' ) {
+                        alert("Please fill all fields...!!!!!!");
+                    } else {
+                        create_request_ajax(title, content, agent);
+                    }
+                });
+
+                function create_request_ajax (title, content, agent) {
+                    var request = $.ajax({
+                        url: "/api/request/create",
+                        type: "POST",
+                        data: {
+                            title: title,
+                            content: content,
+                            agent: agent,
+                        },
+                            beforeSend : function( xhr ) {
+                            var token = localStorage.getItem('Access');
+                            xhr.setRequestHeader( 'Authorization', 'Bearer ' +  token);
+                        },
+                        success: function (data) {
+                            console.log(data);
+                            window.location.href = '/request/' + data.id.toString(); // it's success page
+                        },
+                        error: function (data) {
+                            if (data.status_code == 403) {
+                                alert("Something wrong, try again");
+                            }
+                        },
+                        complete: function () {}
+                    });
+                }
+            });
+    </script>
+</head>
+{% endblock %}
+
+{% block content %}
+<form class="form" method="post" action="#">
+    <h2>Creation form:</h2>
+    <div><label>Title :</label>
+        <input type="text" name="dtitle" id="title"></div>
+    <div><label>Content :</label>
+        <input type="text" name="dcontent" id="content"></div>
+    <div><label>Agent :</label>
+        <input type="text" name="dagent" id="agent"></div>
+    <div><input type="button" name="create" id="create" value="Create"></div>
+</form>
+{% endblock %}
